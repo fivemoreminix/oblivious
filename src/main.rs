@@ -4,7 +4,6 @@ extern crate read_input;
 
 use read_input::*;
 
-use std::io::prelude::*;
 use std::time::Duration;
 
 fn wait(time: Duration) {
@@ -28,9 +27,7 @@ fn dialog(name: &str, text: &str) {
 
 fn main() {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
-    // wait(Duration::from_secs(6));
     dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
-    // wait(Duration::from_secs(7));
     dialog("Lokir", "Damn you Stormcloaks. Skyrim was fine until you came along. Empire was nice and lazy. If they hadn't been looking for you, I could've stolen that horse and been half way to Hammerfell. You there. You and me -- we should be here. It's these Stormcloaks the Empire wants.");
     dialog("Ralof", "We're all brothers and sisters in binds now, thief.");
     dialog("Imperial Soldier", "Shut up back there!");
@@ -64,6 +61,19 @@ fn main() {
     dialog("Lokir", "You've got to tell them! We weren't with you! This is a mistake!");
     dialog("Imperial Captain", "Step toward the block when we call your name. One at a time!");
     dialog("Ralof", "Empire loves their damn lists.");
+    dialog("Hadvar", "Ulfric Stormcloak. Jarl of Windhelm.");
+    dialog("Ralof", "It has been an honor, Jarl Ulfric!");
+    dialog("Hadvar", "Ralof of Riverwood. Lokir of Rorikstead.");
+    dialog("Lokir", "No, I'm not a rebel! You can't do this!");
+    narrate("Lokir makes a break for it.");
+    dialog("Imperial Captain", "Halt!");
+    dialog("Lokir", "You're not going to kill me!");
+    dialog("Imperial Captain", "Archers!");
+    narrate("Lokir is downed with one bowshot.");
+    dialog("Imperial Captain", "Anyone else feel like running?");
+    dialog("Hadvar", "Wait, you there. Step forward. Who are you?");
+
+    // player customization
 
     println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
