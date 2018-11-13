@@ -1,0 +1,8 @@
+[package]
+name = "oblivious"
+version = "0.1.0"
+authors = ["Luke Wilson"]
+edition = "2018"
+
+[dependencies]
+read_input = "0.5.2"
