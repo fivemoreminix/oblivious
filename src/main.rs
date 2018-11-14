@@ -42,7 +42,7 @@ fn main() {
         }
     }
 
-    if false {
+    if true {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
     dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
     dialog("Lokir", "Damn you Stormcloaks. Skyrim was fine until you came along. Empire was nice and lazy. If they hadn't been looking for you, I could've stolen that horse and been half way to Hammerfell. You there. You and me -- we should be here. It's these Stormcloaks the Empire wants.");
@@ -57,7 +57,7 @@ fn main() {
     dialog("Ralof", "Hey, what village are you from, horse thief?");
     dialog("Lokir", "Why do you care?");
     dialog("Ralof", "A Nord's last thoughts should be of home.");
-    dialog("Lokir", "Rorikstead. I'm...I'm from Rorikstead.");
+    dialog("Lokir", "Rorikstead. I'm... I'm from Rorikstead.");
     narrate("They approach the village of Helgen. A soldier calls out to the lead wagon.");
     dialog("Imperial Soldier", "General Tullius, sir! The headsman is waiting!");
     dialog("General Tullius", "Good. Let's get this over with.");
@@ -70,6 +70,7 @@ fn main() {
     dialog("Torolf", "Inside the house. Now.");
     narrate("The wagon stops near the chopping block.");
     dialog("Imperial Soldier", "Whoa.");
+    wait(Duration::from_secs(2));
     dialog("Lokir", "Why are they stopping?");
     dialog("Ralof", "Why do you think? End of the line. Let's go. Shouldn't keep the gods waiting for us.");
     dialog("Lokir", "No! Wait! We're not rebels!");
@@ -86,13 +87,14 @@ fn main() {
     dialog("Imperial Captain", "Halt!");
     dialog("Lokir", "You're not going to kill me!");
     dialog("Imperial Captain", "Archers!");
+    wait(Duration::from_secs(2));
     narrate("Lokir is downed with one bowshot.");
     dialog("Imperial Captain", "Anyone else feel like running?");
     dialog("Hadvar", "Wait, you there. Step forward. Who are you?");
     }
 
     // player customization //
-    println!("\n{}", Style::new().bold().underline().paint("Character Setup"));
+    println!("");
     loop {
         let name: String = input_new().repeat_msg("Name (first): ").get();
         println!("{}", Green.paint(name));
