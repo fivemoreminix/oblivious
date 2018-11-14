@@ -92,8 +92,9 @@ fn main() {
     }
 
     // player customization //
+    println!("\n{}", Style::new().bold().underline().paint("Character Setup"));
     loop {
-        let name: String = input_new().repeat_msg("Name: ").get();
+        let name: String = input_new().repeat_msg("Name (first): ").get();
         println!("{}", Green.paint(name));
         let yn: char = input_new().repeat_msg(&format!("Keep (y/n)? ")).add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n').get();
         match yn {
@@ -151,6 +152,36 @@ fn main() {
             _ => unreachable!(),
         }
     }
+    println!(""); // end character customization with blank line
+
+    dialog("Hadvar", match race {
+        Race::HighElf => "You're not with the Thalmor Embassy, are you, high elf? No, that can't be right...",
+        Race::Argonian => "Are you a relative of one of the Riften dock workers, Argonian?",
+        Race::WoodElf => "Not many wood elves would choose to come alone to Skyrim.",
+        Race::Breton => "You from Daggerfall, Breton? Fleeing from some court intrigue?",
+        Race::DarkElf => "Another refugee? Gods really have abandoned your people, dark elf.",
+        Race::Imperial => "You're a long way from the Imperial City. What're you doing in Skyrim?",
+        Race::Khajit => "You with one of the trade caravans, Khajiit? Your kind always seems to find trouble.",
+        Race::Nord => "You picked a bad time to come home to Skyrim, kinsman.",
+        Race::Orc => "You from one of the strongholds, Orc? How did you end up here?",
+        Race::Redguard => "What are you doing here, Redguard? You a sellsword? A sailor from Stros M'kai?",
+    });
+    dialog("Hadvar", "Captain, what should we do? He's not on the list.");
+    dialog("Imperial Captain", "Forget the list. He goes to the block.");
+    dialog("Hadvar", "By your orders, captain.");
+    dialog("Hadvar", match race {
+        Race::HighElf => "I'm sorry. We'll make sure your remains are returned to the Summerset Isle.",
+        Race::Argonian => "I'm sorry. We'll make sure your remains are returned to Black Marsh.",
+        Race::WoodElf => "I'm sorry. We'll make sure your remains are returned to Valenwood.",
+        Race::Breton => "I'm sorry. We'll make sure your remains are returned to High Rock.",
+        Race::DarkElf => "I'm sorry. We'll make sure your remains are returned to Morrowind.",
+        Race::Imperial => "I'm sorry. We'll make sure your remains are returned to Cyrodiil.",
+        Race::Khajit => "I'm sorry. We'll make sure your remains are returned to Elsweyr.",
+        Race::Nord => "I'm sorry. At least you'll die here, in your homeland.",
+        Race::Orc => "I'm sorry. We'll make sure your remains are returned to Orsinium.",
+        Race::Redguard => "I'm sorry. We'll make sure your remains are returned to Hammerfell.",
+    });
+    dialog("Hadvar", "Follow the Captain, prisoner.");
 
     println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
