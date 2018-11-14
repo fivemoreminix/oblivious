@@ -35,14 +35,13 @@ enum Race {
 }
 
 fn main() {
-    if cfg!(target = "windows") {
-        match ansi_term::enable_ansi_support() {
-            Err(_) => println!("NOTE: You will not have styled text. This is due to your terminal or operating system.\n"),
-            _ => {}
-        }
+    #[cfg(target = "windows")]
+    match ansi_term::enable_ansi_support() {
+        Err(_) => println!("NOTE: You will not have styled text. This is due to your terminal or operating system.\n"),
+        _ => {}
     }
 
-    if false {
+    if true {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
     dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
     dialog("Lokir", "Damn you Stormcloaks. Skyrim was fine until you came along. Empire was nice and lazy. If they hadn't been looking for you, I could've stolen that horse and been half way to Hammerfell. You there. You and me -- we should be here. It's these Stormcloaks the Empire wants.");
@@ -182,6 +181,51 @@ fn main() {
         Race::Redguard => "I'm sorry. We'll make sure your remains are returned to Hammerfell.",
     });
     dialog("Hadvar", "Follow the Captain, prisoner.");
+    narrate("You go to stand with the other waiting prisoners by the block.");
+    dialog("Tullius", "Ulfric Stormcloak. Some here in Helgen call you a hero, but a hero doesn't use a power like the Voice to murder his king and usurp his throne.");
+    dialog("Jarl Ulfric Stormcloak", "(grunting protest)");
+    dialog("Tullius", "You started this war, plunged Skyrim into chaos and now the Empire is going to put you down, and restore the peace.");
+    narrate("A distant noise booms down the mountainside.");
+    dialog("Hadvar", "What was that?");
+    dialog("Tullius", "It's nothing. Carry on.");
+    dialog("Imperial Captain", "Yes, General Tullius. Give them their last rites.");
+    dialog("Priestess of Arkay", "As we commend your souls to Aetherius, blessings of the Eight Divines upon you, for you are the salt and earth of Nirn, our beloved--");
+    narrate("One of the prisoners from the lead wagon walks forward.");
+    dialog("Stormcloak Soldier", "For the love of Talos, shut up and lets get this over with.");
+    dialog("Priestess of Arkay", "As you wish...");
+    wait(Duration::from_secs(4));
+    dialog("Stormcloak Soldier", "Come on, I haven't got all morning. My ancestors are smiling at me, Imperials. Can you say the same?");
+    narrate("They behead the Stormcloak, eliciting responses from the onlookers.");
+    dialog("Stormcloak Solider 2", "You Imperial bastards!");
+    dialog("Vilod", "Justice!");
+    dialog("Ingrid", "Death to the Stormcloaks!");
+    dialog("Ralof", "As fearless in death as he was in life.");
+    dialog("Imperial Captain", match race {
+        Race::HighElf => "Next, the high elf!",
+        Race::Argonian => "Next, the lizard!",
+        Race::WoodElf => "Next, the wood elf!",
+        Race::Breton => "Next, the Breton!",
+        Race::DarkElf => "Next, the dark elf!",
+        Race::Imperial => "Next, the renegade from Cyrodiil!",
+        Race::Khajit => "Next, the cat!",
+        Race::Nord => "Next, the Nord in the rags!",
+        Race::Orc => "Next, the Orc!",
+        Race::Redguard => "Next, the Redguard!",
+    });
+    narrate("Another cry rings out on the mountainside, this time much closer.");
+    dialog("Hadvar", "There it is again. Did you hear that?");
+    dialog("Imperial Captain", "I said, next prisoner!");
+    dialog("Hadvar", "To the block, prisoner. Nice and easy.");
+    narrate("The player is brought to the chopping block. A large creature swoops over the southern peaks, barreling toward Helgen.");
+    dialog("Tullius", "What in Oblivion is that?");
+    dialog("Imperial Captain", "Sentries! What do you see?");
+    dialog("Imperial Soldier", "It's in the clouds!");
+    narrate("The creature, now identified as a dragon, lands on the watchtower next to the block, rumbling the ground and surprising the onlookers.");
+    dialog("Stormcloak Solider", "Dragon!");
+    narrate("The dragon uses its voice on the crowd, killing the headsman.");
+    dialog("Headsman", "Nngh!");
+    dialog("Tullius", "Don't just stand there, kill that thing! Guards, get the townspeople to safety!");
+    
 
     println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
