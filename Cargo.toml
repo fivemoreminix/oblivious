@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 read_input = "0.5.2"
+ansi_term = "0.11.0"
