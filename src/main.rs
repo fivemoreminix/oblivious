@@ -2,6 +2,8 @@
 #![allow(dead_code)]
 #![allow(unused_assignments)]
 
+#[macro_use]
+extern crate version;
 extern crate read_input;
 extern crate ansi_term;
 
@@ -77,8 +79,6 @@ impl Gender {
     }
 }
 
-// useful character: ¯
-
 fn main() {
     #[cfg(target = "windows")]
     match ansi_term::enable_ansi_support() {
@@ -100,20 +100,20 @@ r#"
  / /     (\(  (  /)      \ \                                     by {}
 /  '._____)\)  \/(______,'  \__________________________________________________
 \                           /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
- \     .-.         ,-.     /  Version 0.1 (November 14, 2018)
+ \     .-.         ,-.     /  Version {}
   \   /   \/\   (\/   \   /
-   \  \      \   )    /  /
-    \  \      ) /   ,'  /
+   \  \      \   )    /  /    Game script from
+    \  \      ) /   ,'  /     {}
      \  \    / /   |   /
-      \  \   \ \   |  /
-       \  )   ) )  | /
+      \  \   \ \   |  /       All code is owned by me and licensed Creative-Commons Zero (CC0)
+       \  )   ) )  | /        The script and game is copyrighted content owned by Bethesda
         \ |  / /   (/
          \) / /
            / /  /|
            \ \_/ )
             \   /
              \_/
-"#, Green.paint("Oblivious"), Cyan.paint("Luke Wilson"));
+"#, Green.paint("Oblivious"), Cyan.paint("Luke Wilson"), Green.paint(version!()), Style::new().underline().paint("http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/"));
 
     input_new::<String>().msg("Press enter to start... ").get();
 
@@ -330,12 +330,13 @@ r#"
     narrate("The dragon, Alduin, breaks in through the wall, blasting fire everywhere.");
     dialog("Ralof", "Get back!");
     dialog("Alduin", "Toor shul!");
+    wait(Duration::from_secs(3));
     narrate("They survey the damage when the dragon leaves.");
     dialog("Ralof", "See the inn on the other side? Jump through the roof and keep going! Go! We'll follow you when we can!");
     }
 
     loop {
-        match &simple_input::<String>().trim().to_lowercase()[..] {
+        match &input_new::<String>().repeat_msg(">").get().trim().to_lowercase()[..] {
             "look" => println!("{}", Blue.paint("Standing forty feet above the ground, in front of a simmering hole in the tower's stone wall; you overlook a pillaged town, with burning buildings, people running frantically, fire, arrows, and the dragon's booming voice.")),
             "jump" => {
                 narrate("You take a step back, size up your target, and jump from the side of the tower into the open roof of the inn below.");
@@ -355,6 +356,7 @@ r#"
     dialog("Hadvar", "Stay close to the wall!");
     narrate("They take cover as a dragon perches right above.");
     dialog("Alduin", "Vol toor shul!");
+    wait(Duration::from_secs(3));
     dialog("Hadvar", "Quickly, follow me!");
     narrate("They reach the main gate's carnage. Soldiers are firing arrows in vain.");
     dialog("Vilod", "Tell my family I fought bravely!");
@@ -381,6 +383,4 @@ r#"
             _ => println!("{}", Red.paint("Choose either Hadvar or Ralof.")),
         }
     }
-
-    println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
