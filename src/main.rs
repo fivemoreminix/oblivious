@@ -68,6 +68,13 @@ impl Gender {
             Gender::Female => "hers",
         }
     }
+
+    pub fn boy_girl(&self) -> &'static str {
+        match self {
+            Gender::Male => "boy",
+            Gender::Female => "girl",
+        }
+    }
 }
 
 // useful character: ¯
@@ -93,7 +100,7 @@ r#"
  / /     (\(  (  /)      \ \                                     by {}
 /  '._____)\)  \/(______,'  \__________________________________________________
 \                           /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
- \     .-.         ,-.     /
+ \     .-.         ,-.     /  Version 0.1 (November 14, 2018)
   \   /   \/\   (\/   \   /
    \  \      \   )    /  /
     \  \      ) /   ,'  /
@@ -108,7 +115,7 @@ r#"
              \_/
 "#, Green.paint("Oblivious"), Cyan.paint("Luke Wilson"));
 
-    input_new::<char>().msg("Press enter to start... ").get();
+    input_new::<String>().msg("Press enter to start... ").get();
 
     if true {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
@@ -341,6 +348,39 @@ r#"
 
     narrate("You hit the ground running on the upstairs floor, and you continue running to where the floor has already fallen in and transitions into the bottom level floor.");
     narrate("You escape through the inn's door, encountering the list-giver with some refugees.");
+    dialog("Hadvar", "Haming, you need to get over here now! Thataboy. You're doing great! Torolf! Gods...everyone get back!");
+    narrate("The dragon breathes an immense blaze in your direction, but nobody is engulfed.");
+    dialog("Hadvar", &format!("Still alive, prisoner? Keep close to me if you want to stay that way. Gunnar, take care of the {}. I have to find General Tullius and join the defense.", gender.boy_girl()));
+    dialog("Gunnar", "Gods guide you, Hadvar.");
+    dialog("Hadvar", "Stay close to the wall!");
+    narrate("They take cover as a dragon perches right above.");
+    dialog("Alduin", "Vol toor shul!");
+    dialog("Hadvar", "Quickly, follow me!");
+    narrate("They reach the main gate's carnage. Soldiers are firing arrows in vain.");
+    dialog("Vilod", "Tell my family I fought bravely!");
+    dialog("Tullius", "Hadvar! Into the keep, solider, we're leaving!");
+    dialog("Hadvar", "It's you and me, prisoner, stay close!");
+    dialog("Imperial Soldier", "How in Oblivion do we kill this thing? Just...die!");
+    narrate("Near the keep, Ralof is seen.");
+    dialog("Hadvar", "Ralof! You damned traitor, out of my way!");
+    dialog("Ralof", "We're escaping, Hadvar! You're not stopping us this time.");
+    dialog("Hadvar", "Fine. I hope that dragon takes you all to Sovngarde.");
+    dialog("Ralof", "You, come on! Into the keep!");
+    dialog("Hadvar", "With me, prisoner! Let's go! Come on! We need to get inside!");
+
+    loop {
+        match &input_new::<String>().repeat_msg(&format!("Choose ({}): ", list_options(&["Hadvar", "Ralof"]))).get().trim().to_lowercase()[..] {
+            "hadvar" => {
+                narrate("Coming soon :)");
+                break;
+            }
+            "ralof" => {
+                narrate("Coming soon :)");
+                break;
+            }
+            _ => println!("{}", Red.paint("Choose either Hadvar or Ralof.")),
+        }
+    }
 
     println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
