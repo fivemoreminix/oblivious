@@ -1,4 +1,6 @@
 #![feature(duration_float)]
+#![allow(dead_code)]
+#![allow(unused_assignments)]
 
 extern crate read_input;
 extern crate ansi_term;
@@ -7,7 +9,6 @@ use read_input::*;
 use ansi_term::Colour::*;
 use ansi_term::Style;
 
-use std::io::Write;
 use std::time::Duration;
 
 fn wait(time: Duration) {
@@ -30,9 +31,46 @@ fn dialog(name: &str, text: &str) {
     wait(Duration::from_float_secs(seconds_to_read(text)));
 }
 
+fn list_options(options: &[&str]) -> String {
+    assert!(options.len() > 0);
+    let mut commas = options.len() - 1;
+    let mut output = String::new();
+    for item in options {
+        output.push_str(&Green.paint(*item).to_string());
+        if commas != 0 {
+            output.push_str(", ");
+            commas -= 1;
+        }
+    }
+    output
+}
+
 enum Race {
     HighElf, Argonian, WoodElf, Breton, DarkElf, Imperial, Khajit, Nord, Orc, Redguard,
 }
+
+enum Gender {
+    Male,
+    Female,
+}
+
+impl Gender {
+    pub fn he_she(&self, capitalized: bool) -> &'static str {
+        match self {
+            Gender::Male => if capitalized { "He" } else { "he" },
+            Gender::Female => if capitalized { "She" } else { "she" },
+        }
+    }
+
+    pub fn his_hers(&self) -> &'static str {
+        match self {
+            Gender::Male => "his",
+            Gender::Female => "hers",
+        }
+    }
+}
+
+// useful character: ¯
 
 fn main() {
     #[cfg(target = "windows")]
@@ -40,6 +78,37 @@ fn main() {
         Err(_) => println!("NOTE: You will not have styled text. This is due to your terminal or operating system.\n"),
         _ => {}
     }
+
+    // print skyrim logo
+    println!(
+r#"
+         /\       /\
+        / (       ) \
+       / /\)     (/\ \
+      / /   (\      \ \
+     / /    ; \_/)   \ \
+    / /    (,-. (     \ \
+   / /         ) )     \ \
+  / /       ,-','       \ \   Skyrim Text Adventure Game "{}"
+ / /     (\(  (  /)      \ \                                     by {}
+/  '._____)\)  \/(______,'  \__________________________________________________
+\                           /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ \     .-.         ,-.     /
+  \   /   \/\   (\/   \   /
+   \  \      \   )    /  /
+    \  \      ) /   ,'  /
+     \  \    / /   |   /
+      \  \   \ \   |  /
+       \  )   ) )  | /
+        \ |  / /   (/
+         \) / /
+           / /  /|
+           \ \_/ )
+            \   /
+             \_/
+"#, Green.paint("Oblivious"), Cyan.paint("Luke Wilson"));
+
+    input_new::<char>().msg("Press enter to start... ").get();
 
     if true {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
@@ -94,8 +163,26 @@ fn main() {
 
     // player customization //
     println!("");
+    let mut gender = Gender::Male;
     loop {
-        let name: String = input_new().repeat_msg("Name (first): ").get();
+        match &input_new::<String>().repeat_msg(&format!("Gender ({}): ", list_options(&["male", "female"]))).get().trim().to_lowercase()[..] {
+            "m" | "male" => {
+                gender = Gender::Male;
+                break;
+            }
+            "f" | "female" => {
+                gender = Gender::Female;
+                break;
+            }
+            _ => {
+                println!("Not a valid gender. Choose male or female. Note: there are only two genders.");
+            }
+        }
+    }
+
+    let mut name: String;
+    loop {
+        name = input_new().repeat_msg("Name (first): ").get();
         println!("{}", Green.paint(name));
         let yn: char = input_new().repeat_msg(&format!("Keep (y/n)? ")).add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n').get();
         match yn {
@@ -120,9 +207,7 @@ fn main() {
             "orc" => race = Race::Orc,
             "redguard" => race = Race::Redguard,
             "?" | "" => {
-                for r in &["High Elf", "Argonian", "Wood Elf", "Breton", "Dark Elf", "Imperial", "Khajit", "Nord", "Orc", "Redguard"] {
-                    print!("{}, ", Green.paint(*r));
-                }
+                println!("{}", list_options(&["High Elf", "Argonian", "Wood Elf", "Breton", "Dark Elf", "Imperial", "Khajit", "Nord", "Orc", "Redguard"]));
                 println!("");
                 continue;
             }
@@ -155,6 +240,7 @@ fn main() {
     }
     println!(""); // end character customization with blank line
 
+    if true {
     dialog("Hadvar", match race {
         Race::HighElf => "You're not with the Thalmor Embassy, are you, high elf? No, that can't be right...",
         Race::Argonian => "Are you a relative of one of the Riften dock workers, Argonian?",
@@ -167,8 +253,8 @@ fn main() {
         Race::Orc => "You from one of the strongholds, Orc? How did you end up here?",
         Race::Redguard => "What are you doing here, Redguard? You a sellsword? A sailor from Stros M'kai?",
     });
-    dialog("Hadvar", "Captain, what should we do? He's not on the list.");
-    dialog("Imperial Captain", "Forget the list. He goes to the block.");
+    dialog("Hadvar", &format!("Captain, what should we do? {}'s not on the list.", gender.he_she(true)));
+    dialog("Imperial Captain", &format!("Forget the list. {} goes to the block.", gender.he_she(true)));
     dialog("Hadvar", "By your orders, captain.");
     dialog("Hadvar", match race {
         Race::HighElf => "I'm sorry. We'll make sure your remains are returned to the Summerset Isle.",
@@ -227,7 +313,34 @@ fn main() {
     narrate("The dragon uses its voice on the crowd, killing the headsman.");
     dialog("Headsman", "Nngh!");
     dialog("Tullius", "Don't just stand there, kill that thing! Guards, get the townspeople to safety!");
-    
+    dialog("Ralof", "Get up! Come on, the gods won't give us another chance!");
+    dialog("Ralof", "This way!");
+    narrate("Ralof leads you to a tower where the other prisoners are hiding.");
+    dialog("Ralof", "Jarl Ulfric! What is that thing? Could the legends be true?");
+    dialog("Ulfric", "Legends don't burn down villages. We need to move, now!");
+    dialog("Ralof", "Up through the tower. Let's go! This way, friend! Move!");
+    dialog("Stormcloak Soldier", "We just need to move some of these rocks to clear the way!");
+    narrate("The dragon, Alduin, breaks in through the wall, blasting fire everywhere.");
+    dialog("Ralof", "Get back!");
+    dialog("Alduin", "Toor shul!");
+    narrate("They survey the damage when the dragon leaves.");
+    dialog("Ralof", "See the inn on the other side? Jump through the roof and keep going! Go! We'll follow you when we can!");
+    }
+
+    loop {
+        match &simple_input::<String>().trim().to_lowercase()[..] {
+            "look" => println!("{}", Blue.paint("Standing forty feet above the ground, in front of a simmering hole in the tower's stone wall; you overlook a pillaged town, with burning buildings, people running frantically, fire, arrows, and the dragon's booming voice.")),
+            "jump" => {
+                narrate("You take a step back, size up your target, and jump from the side of the tower into the open roof of the inn below.");
+                break;
+            }
+            "?" => println!("{}", list_options(&["look", "jump"])),
+            _ => println!("{}", Red.paint("Command unknown.")),
+        }
+    }
+
+    narrate("You hit the ground running on the upstairs floor, and you continue running to where the floor has already fallen in and transitions into the bottom level floor.");
+    narrate("You escape through the inn's door, encountering the list-giver with some refugees.");
 
     println!("\nGame script from http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/");
 }
