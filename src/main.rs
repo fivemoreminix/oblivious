@@ -7,77 +7,15 @@ extern crate version;
 extern crate read_input;
 extern crate ansi_term;
 
+mod definitions;
+
+use self::definitions::*;
+
 use read_input::*;
 use ansi_term::Colour::*;
 use ansi_term::Style;
 
 use std::time::Duration;
-
-fn wait(time: Duration) {
-    std::thread::sleep(time);
-}
-
-static WPM: f64 = 200.;
-static WPS: f64 = WPM / 60.;
-fn seconds_to_read(text: &str) -> f64 {
-    text.split_whitespace().count() as f64 / WPS
-}
-
-fn narrate(text: &str) {
-    println!("{}", Blue.paint(text));
-    wait(Duration::from_float_secs(seconds_to_read(text)));
-}
-
-fn dialog(name: &str, text: &str) {
-    println!("{}: {}", Red.paint(name), text);
-    wait(Duration::from_float_secs(seconds_to_read(text)));
-}
-
-fn list_options(options: &[&str]) -> String {
-    assert!(options.len() > 0);
-    let mut commas = options.len() - 1;
-    let mut output = String::new();
-    for item in options {
-        output.push_str(&Green.paint(*item).to_string());
-        if commas != 0 {
-            output.push_str(", ");
-            commas -= 1;
-        }
-    }
-    output
-}
-
-enum Race {
-    HighElf, Argonian, WoodElf, Breton, DarkElf, Imperial, Khajit, Nord, Orc, Redguard,
-}
-
-enum Gender {
-    Male,
-    Female,
-}
-
-impl Gender {
-    pub fn he_she(&self, capitalized: bool) -> &'static str {
-        match self {
-            Gender::Male => if capitalized { "He" } else { "he" },
-            Gender::Female => if capitalized { "She" } else { "she" },
-        }
-    }
-
-    pub fn his_hers(&self) -> &'static str {
-        match self {
-            Gender::Male => "his",
-            Gender::Female => "hers",
-        }
-    }
-
-    pub fn boy_girl(&self) -> &'static str {
-        match self {
-            Gender::Male => "boy",
-            Gender::Female => "girl",
-        }
-    }
-}
 
 fn main() {
     #[cfg(target = "windows")]
@@ -117,6 +55,10 @@ r#"
 
     input_new::<String>().msg("Press enter to start... ").get();
 
+    prologue();
+}
+
+fn prologue() {
     if true {
     narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
     dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
@@ -342,8 +284,8 @@ r#"
                 narrate("You take a step back, size up your target, and jump from the side of the tower into the open roof of the inn below.");
                 break;
             }
-            "?" => println!("{}", list_options(&["look", "jump"])),
-            _ => println!("{}", Red.paint("Command unknown.")),
+            "?" => println!("{}", list_options(&["look", "jump (continue story)"])),
+            _ => println!("Command unknown. '?' for a list of commands."),
         }
     }
 
@@ -377,10 +319,16 @@ r#"
                 break;
             }
             "ralof" => {
-                narrate("Coming soon :)");
+                branch_ralof();
                 break;
             }
             _ => println!("{}", Red.paint("Choose either Hadvar or Ralof.")),
         }
     }
+}
+
+fn branch_ralof() {
+    narrate("Upon entering the keep, Ralof goes to check on a fallen comrade.");
+    dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
+
 }
