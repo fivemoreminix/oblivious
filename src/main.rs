@@ -18,7 +18,7 @@ use ansi_term::Style;
 use std::time::Duration;
 
 fn main() {
-    #[cfg(target = "windows")]
+    #[cfg(target_os = "windows")]
     match ansi_term::enable_ansi_support() {
         Err(_) => println!("NOTE: You will not have styled text. This is due to your terminal or operating system.\n"),
         _ => {}
