@@ -85,6 +85,10 @@ impl Item for Weapon {
     fn weight(&self) -> f32 {
         1.
     }
+
+    fn value(&self) -> u16 {
+        100
+    }
 }
 
 struct Container {
