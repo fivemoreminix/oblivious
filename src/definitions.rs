@@ -55,10 +55,10 @@ impl Gender {
         }
     }
 
-    pub fn his_hers(&self) -> &'static str {
+    pub fn his_her(&self) -> &'static str {
         match self {
             Gender::Male => "his",
-            Gender::Female => "hers",
+            Gender::Female => "her",
         }
     }
 
@@ -77,17 +77,18 @@ trait Item {
 
 struct Weapon {
     name: String,
-
+    weight: f32,
+    value: u16,
 }
 
 
 impl Item for Weapon {
     fn weight(&self) -> f32 {
-        1.
+        self.weight
     }
 
     fn value(&self) -> u16 {
-        100
+        self.value
     }
 }
 
