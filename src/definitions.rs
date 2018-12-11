@@ -70,19 +70,25 @@ impl Gender {
     }
 }
 
-trait Item {
+pub trait Item {
+    fn name(&self) -> &str;
     fn weight(&self) -> f32;
     fn value(&self) -> u16;
 }
 
-struct Weapon {
-    name: String,
+pub struct Weapon {
+    name: &'static str,
+    base_damage: u16,
     weight: f32,
     value: u16,
 }
 
 
 impl Item for Weapon {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn weight(&self) -> f32 {
         self.weight
     }
@@ -92,15 +98,49 @@ impl Item for Weapon {
     }
 }
 
-struct Container {
+pub struct Container {
     name: String,
     items: Vec<&'static Item>,
-    weight_cap: f32,
 }
 
-struct Room {
+impl Container {
+    pub fn new(name: &str, items: Vec<&'static Item>) -> Container {
+        Container {
+            name: name.to_owned(),
+            items,
+        }
+    }
+}
+
+pub struct Room {
     name: String,
     description: String,
     items: Vec<&'static Item>,
     containers: Vec<Container>,
+    // people
 }
+
+impl Room {
+    pub fn new(name: &str, description: &str, items: Option<Vec<&'static Item>>, containers: Option<Vec<Container>>) -> Room {
+        Room {
+            name: name.to_owned(),
+            description: description.to_owned(),
+            items: match items { Some(t) => t, _ => Vec::new() },
+            containers: match containers { Some(c) => c, _ => Vec::new() }
+        }
+    }
+}
+
+pub fn process_command(command: &str, current_room: &Room) {
+    let cmd = command.to_lowercase();
+    if cmd.contains("help") {
+        println!("Items: {}", list_options(&current_room.items.iter().map(|item| item.name()).collect::<Vec<&str>>()));
+        println!("Containers: {}", list_options(&current_room.containers.iter().map(|container| &container.name[..]).collect::<Vec<&str>>()));
+    } else if cmd.contains("look") {
+        narrate(&current_room.description);
+    } else {
+        println!("Unrecognized command.");
+    }
+}
+
+pub static IMPERIAL_SWORD: Weapon = Weapon { name: "Imperial Sword", base_damage: 8, weight: 10., value: 23 };
