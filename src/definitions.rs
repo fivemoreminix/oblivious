@@ -5,7 +5,9 @@ use ansi_term::Style;
 use std::time::Duration;
 
 pub fn wait(time: Duration) {
-    std::thread::sleep(time);
+    if cfg!(debug_assertions) == false {
+        std::thread::sleep(time);
+    }
 }
 
 static WPM: f64 = 200.;
@@ -16,12 +18,12 @@ pub fn seconds_to_read(text: &str) -> f64 {
 
 pub fn narrate(text: &str) {
     println!("{}", Blue.paint(text));
-    wait(Duration::from_float_secs(seconds_to_read(text)));
+    wait(Duration::from_float_secs(seconds_to_read(text)) + Duration::from_secs(1));
 }
 
 pub fn dialog(name: &str, text: &str) {
     println!("{}: {}", Red.paint(name), text);
-    wait(Duration::from_float_secs(seconds_to_read(text)));
+    wait(Duration::from_float_secs(seconds_to_read(text)) + Duration::from_secs(1));
 }
 
 pub fn list_options(options: &[&str]) -> String {
@@ -38,10 +40,12 @@ pub fn list_options(options: &[&str]) -> String {
     output
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Race {
     HighElf, Argonian, WoodElf, Breton, DarkElf, Imperial, Khajit, Nord, Orc, Redguard,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Gender {
     Male,
     Female,
@@ -76,13 +80,42 @@ pub trait Item {
     fn value(&self) -> u16;
 }
 
+pub struct Player {
+    name: String,
+    race: Race,
+    gender: Gender,
+    inventory: Vec<&'static Item>,
+    max_health: u32,
+    max_stamina: u32,
+    max_magicka: u32,
+    health: u32,
+    stamina: u32,
+    magicka: u32,
+}
+
+impl Player {
+    pub fn new(name: &str, race: Race, gender: Gender) -> Player {
+        Player {
+            name: name.to_owned(),
+            race,
+            gender,
+            inventory: Vec::new(),
+            max_health: 100,
+            max_stamina: 100,
+            max_magicka: 100,
+            health: 100,
+            stamina: 100,
+            magicka: 100,
+        }
+    }
+}
+
 pub struct Weapon {
     name: &'static str,
     base_damage: u16,
     weight: f32,
     value: u16,
 }
-
 
 impl Item for Weapon {
     fn name(&self) -> &str {
@@ -131,15 +164,21 @@ impl Room {
     }
 }
 
-pub fn process_command(command: &str, current_room: &Room) {
+pub fn process_command(command: &str, player: &mut Player, current_room: &mut Room) {
     let cmd = command.to_lowercase();
     if cmd.contains("help") {
-        println!("Items: {}", list_options(&current_room.items.iter().map(|item| item.name()).collect::<Vec<&str>>()));
-        println!("Containers: {}", list_options(&current_room.containers.iter().map(|container| &container.name[..]).collect::<Vec<&str>>()));
+        if current_room.items.len() > 0 {
+            println!("Items: {}", list_options(&current_room.items.iter().map(|item| item.name()).collect::<Vec<&str>>()));
+        }
+        if current_room.containers.len() > 0 {
+            println!("Containers: {}", list_options(&current_room.containers.iter().map(|container| &container.name[..]).collect::<Vec<&str>>()));
+        }
     } else if cmd.contains("look") {
         narrate(&current_room.description);
+    } else if cmd.contains("inventory") {
+        println!("Items: {}", list_options(&player.inventory.iter().map(|item| item.name()).collect::<Vec<&str>>()));
     } else {
-        println!("Unrecognized command.");
+        println!("Unrecognized command. Try 'help' for a list of commands.");
     }
 }
 

@@ -132,7 +132,7 @@ fn prologue() {
     let mut name: String;
     loop {
         name = input_new().repeat_msg("Name (first): ").get();
-        println!("{}", Green.paint(name));
+        println!("{}", Green.paint(&name));
         let yn: char = input_new().repeat_msg(&format!("Keep (y/n)? ")).add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n').get();
         match yn {
             'Y' | 'y' => break,
@@ -188,6 +188,8 @@ fn prologue() {
         }
     }
     println!(""); // end character customization with blank line
+
+    let mut player = Player::new(&name, race, gender);
 
     if true {
     dialog("Hadvar", match race {
@@ -319,7 +321,7 @@ fn prologue() {
                 break;
             }
             "ralof" => {
-                branch_ralof();
+                branch_ralof(&mut player);
                 break;
             }
             _ => println!("{}", Red.paint("Choose either Hadvar or Ralof.")),
@@ -327,13 +329,13 @@ fn prologue() {
     }
 }
 
-fn branch_ralof() {
+fn branch_ralof(player: &mut Player) {
     narrate("Upon entering the keep, Ralof goes to check on a fallen comrade.");
     dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
     
     let chest = Container::new("Chest", vec!(&IMPERIAL_SWORD));
-    let room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep cause tiny particles to be shaken from the walls.", None, Some(vec!(chest)));
+    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep cause tiny particles to be shaken from the walls.", None, Some(vec!(chest)));
     loop {
-        process_command(&input, current_room: &Room)
+        process_command(&input_new::<String>().repeat_msg(">").get().trim(), player, &mut room);
     }
 }
