@@ -1,6 +1,6 @@
-use read_input::*;
 use ansi_term::Colour::*;
 use ansi_term::Style;
+use read_input::*;
 
 use std::time::Duration;
 
@@ -42,7 +42,16 @@ pub fn list_options(options: &[&str]) -> String {
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Race {
-    HighElf, Argonian, WoodElf, Breton, DarkElf, Imperial, Khajit, Nord, Orc, Redguard,
+    HighElf,
+    Argonian,
+    WoodElf,
+    Breton,
+    DarkElf,
+    Imperial,
+    Khajit,
+    Nord,
+    Orc,
+    Redguard,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -54,8 +63,20 @@ pub enum Gender {
 impl Gender {
     pub fn he_she(&self, capitalized: bool) -> &'static str {
         match self {
-            Gender::Male => if capitalized { "He" } else { "he" },
-            Gender::Female => if capitalized { "She" } else { "she" },
+            Gender::Male => {
+                if capitalized {
+                    "He"
+                } else {
+                    "he"
+                }
+            }
+            Gender::Female => {
+                if capitalized {
+                    "She"
+                } else {
+                    "she"
+                }
+            }
         }
     }
 
@@ -74,17 +95,23 @@ impl Gender {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum ItemType<'a> {
+    Weapon(&'a Weapon),
+}
+
 pub trait Item {
     fn name(&self) -> &str;
     fn weight(&self) -> f32;
     fn value(&self) -> u16;
+    fn intrinsic(&self) -> ItemType;
 }
 
 pub struct Player {
     name: String,
     race: Race,
     gender: Gender,
-    inventory: Vec<&'static Item>,
+    pub inventory: Vec<&'static Item>,
     max_health: u32,
     max_stamina: u32,
     max_magicka: u32,
@@ -108,8 +135,19 @@ impl Player {
             magicka: 100,
         }
     }
+
+    pub fn inventory_weapons(&self) -> Vec<&Weapon> {
+        self.inventory
+            .iter()
+            .filter_map(|i| match i.intrinsic() {
+                ItemType::Weapon(weapon) => Some(weapon),
+                _ => None,
+            })
+            .collect()
+    }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Weapon {
     name: &'static str,
     base_damage: u16,
@@ -128,6 +166,10 @@ impl Item for Weapon {
 
     fn value(&self) -> u16 {
         self.value
+    }
+
+    fn intrinsic(&self) -> ItemType {
+        ItemType::Weapon(&self)
     }
 }
 
@@ -154,12 +196,23 @@ pub struct Room {
 }
 
 impl Room {
-    pub fn new(name: &str, description: &str, items: Option<Vec<&'static Item>>, containers: Option<Vec<Container>>) -> Room {
+    pub fn new(
+        name: &str,
+        description: &str,
+        items: Option<Vec<&'static Item>>,
+        containers: Option<Vec<Container>>,
+    ) -> Room {
         Room {
             name: name.to_owned(),
             description: description.to_owned(),
-            items: match items { Some(t) => t, _ => Vec::new() },
-            containers: match containers { Some(c) => c, _ => Vec::new() }
+            items: match items {
+                Some(t) => t,
+                _ => Vec::new(),
+            },
+            containers: match containers {
+                Some(c) => c,
+                _ => Vec::new(),
+            },
         }
     }
 }
@@ -167,19 +220,72 @@ impl Room {
 pub fn process_command(command: &str, player: &mut Player, current_room: &mut Room) {
     let cmd = command.to_lowercase();
     if cmd.contains("help") {
+        println!("Commands: {}", list_options(&["look", "inventory", "take <items>"]));
+    } else if cmd.contains("look") {
+        println!("{}", &current_room.description);
         if current_room.items.len() > 0 {
-            println!("Items: {}", list_options(&current_room.items.iter().map(|item| item.name()).collect::<Vec<&str>>()));
+            println!(
+                "Items: {}",
+                list_options(
+                    &current_room
+                        .items
+                        .iter()
+                        .map(|item| item.name())
+                        .collect::<Vec<&str>>()
+                )
+            );
         }
         if current_room.containers.len() > 0 {
-            println!("Containers: {}", list_options(&current_room.containers.iter().map(|container| &container.name[..]).collect::<Vec<&str>>()));
+            println!(
+                "Containers: {}",
+                list_options(
+                    &current_room
+                        .containers
+                        .iter()
+                        .map(|container| &container.name[..])
+                        .collect::<Vec<&str>>()
+                )
+            );
         }
-    } else if cmd.contains("look") {
-        narrate(&current_room.description);
     } else if cmd.contains("inventory") {
-        println!("Items: {}", list_options(&player.inventory.iter().map(|item| item.name()).collect::<Vec<&str>>()));
+        println!(
+            "Items: {}",
+            list_options(
+                &player
+                    .inventory
+                    .iter()
+                    .map(|item| item.name())
+                    .collect::<Vec<&str>>()
+            )
+        );
+    } else if cmd.starts_with("take") {
+        let item_names: Vec<&str> = cmd.split_whitespace().collect();
+        if item_names.len() > 1 {
+            let mut items = Vec::<&Item>::new();
+            for item in &item_names[1..] {
+                for &room_item in &current_room.items {
+                    if item == &room_item.name() {
+                        items.push(room_item);
+                        // remove items in room
+                    }
+                }
+            }
+
+            player.inventory.extend(&items);
+            for item in &items {
+                // or remove items from room here
+            }
+        } else {
+            println!("Usage: `take <items>` where `items` is a list of items in the room to pickup.");
+        }
     } else {
         println!("Unrecognized command. Try 'help' for a list of commands.");
     }
 }
 
-pub static IMPERIAL_SWORD: Weapon = Weapon { name: "Imperial Sword", base_damage: 8, weight: 10., value: 23 };
+pub static IMPERIAL_SWORD: Weapon = Weapon {
+    name: "Imperial Sword",
+    base_damage: 8,
+    weight: 10.,
+    value: 23,
+};

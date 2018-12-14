@@ -4,16 +4,16 @@
 
 #[macro_use]
 extern crate version;
-extern crate read_input;
 extern crate ansi_term;
+extern crate read_input;
 
 mod definitions;
 
 use self::definitions::*;
 
-use read_input::*;
 use ansi_term::Colour::*;
 use ansi_term::Style;
+use read_input::*;
 
 use std::time::Duration;
 
@@ -60,61 +60,96 @@ r#"
 
 fn prologue() {
     if true {
-    narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
-    dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
-    dialog("Lokir", "Damn you Stormcloaks. Skyrim was fine until you came along. Empire was nice and lazy. If they hadn't been looking for you, I could've stolen that horse and been half way to Hammerfell. You there. You and me -- we should be here. It's these Stormcloaks the Empire wants.");
-    dialog("Ralof", "We're all brothers and sisters in binds now, thief.");
-    dialog("Imperial Soldier", "Shut up back there!");
-    narrate("Lokir looks at the gagged man.");
-    dialog("Lokir", "And what's wrong with him?");
-    dialog("Ralof", "Watch your tongue! You're speaking to Ulfric Stormcloak, the true High King.");
-    dialog("Lokir", "Ulfric? The Jarl of Windhelm? You're the leader of the rebellion. But if they captured you... Oh gods, where are they taking us?");
-    dialog("Ralof", "I don't know where we're going, but Sovngarde awaits.");
-    dialog("Lokir", "No, this can't be happening. This isn't happening.");
-    dialog("Ralof", "Hey, what village are you from, horse thief?");
-    dialog("Lokir", "Why do you care?");
-    dialog("Ralof", "A Nord's last thoughts should be of home.");
-    dialog("Lokir", "Rorikstead. I'm... I'm from Rorikstead.");
-    narrate("They approach the village of Helgen. A soldier calls out to the lead wagon.");
-    dialog("Imperial Soldier", "General Tullius, sir! The headsman is waiting!");
-    dialog("General Tullius", "Good. Let's get this over with.");
-    dialog("Lokir", "Shor, Mara, Dibella, Kynareth, Akatosh. Divines, please help me.");
-    dialog("Ralof", "Look at him, General Tullius the Military Governor. And it looks like the Thalmor are with him. Damn elves. I bet they had something to do with this.\nThis is Helgen. I used to be sweet on a girl from here. Wonder if Vilod is still making that mead with juniper berries mixed in. Funny...when I was a boy, Imperial walls and towers used to make me feel so safe.");
-    narrate("A man and son watch the prisoners pull into town.");
-    dialog("Haming", "Who are they, daddy? Where are they going?");
-    dialog("Torolf", "You need to go inside, little cub.");
-    dialog("Haming", "Why? I want to watch the soldiers.");
-    dialog("Torolf", "Inside the house. Now.");
-    narrate("The wagon stops near the chopping block.");
-    dialog("Imperial Soldier", "Whoa.");
-    wait(Duration::from_secs(2));
-    dialog("Lokir", "Why are they stopping?");
-    dialog("Ralof", "Why do you think? End of the line. Let's go. Shouldn't keep the gods waiting for us.");
-    dialog("Lokir", "No! Wait! We're not rebels!");
-    dialog("Ralof", "Face your death with some courage, thief.");
-    narrate("Under the Imperials' watchful eye, the prisoners start jumping out.");
-    dialog("Lokir", "You've got to tell them! We weren't with you! This is a mistake!");
-    dialog("Imperial Captain", "Step toward the block when we call your name. One at a time!");
-    dialog("Ralof", "Empire loves their damn lists.");
-    dialog("Hadvar", "Ulfric Stormcloak. Jarl of Windhelm.");
-    dialog("Ralof", "It has been an honor, Jarl Ulfric!");
-    dialog("Hadvar", "Ralof of Riverwood. Lokir of Rorikstead.");
-    dialog("Lokir", "No, I'm not a rebel! You can't do this!");
-    narrate("Lokir makes a break for it.");
-    dialog("Imperial Captain", "Halt!");
-    dialog("Lokir", "You're not going to kill me!");
-    dialog("Imperial Captain", "Archers!");
-    wait(Duration::from_secs(2));
-    narrate("Lokir is downed with one bowshot.");
-    dialog("Imperial Captain", "Anyone else feel like running?");
-    dialog("Hadvar", "Wait, you there. Step forward. Who are you?");
+        narrate("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
+        dialog("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
+        dialog("Lokir", "Damn you Stormcloaks. Skyrim was fine until you came along. Empire was nice and lazy. If they hadn't been looking for you, I could've stolen that horse and been half way to Hammerfell. You there. You and me -- we should be here. It's these Stormcloaks the Empire wants.");
+        dialog(
+            "Ralof",
+            "We're all brothers and sisters in binds now, thief.",
+        );
+        dialog("Imperial Soldier", "Shut up back there!");
+        narrate("Lokir looks at the gagged man.");
+        dialog("Lokir", "And what's wrong with him?");
+        dialog(
+            "Ralof",
+            "Watch your tongue! You're speaking to Ulfric Stormcloak, the true High King.",
+        );
+        dialog("Lokir", "Ulfric? The Jarl of Windhelm? You're the leader of the rebellion. But if they captured you... Oh gods, where are they taking us?");
+        dialog(
+            "Ralof",
+            "I don't know where we're going, but Sovngarde awaits.",
+        );
+        dialog(
+            "Lokir",
+            "No, this can't be happening. This isn't happening.",
+        );
+        dialog("Ralof", "Hey, what village are you from, horse thief?");
+        dialog("Lokir", "Why do you care?");
+        dialog("Ralof", "A Nord's last thoughts should be of home.");
+        dialog("Lokir", "Rorikstead. I'm... I'm from Rorikstead.");
+        narrate("They approach the village of Helgen. A soldier calls out to the lead wagon.");
+        dialog(
+            "Imperial Soldier",
+            "General Tullius, sir! The headsman is waiting!",
+        );
+        dialog("General Tullius", "Good. Let's get this over with.");
+        dialog(
+            "Lokir",
+            "Shor, Mara, Dibella, Kynareth, Akatosh. Divines, please help me.",
+        );
+        dialog("Ralof", "Look at him, General Tullius the Military Governor. And it looks like the Thalmor are with him. Damn elves. I bet they had something to do with this.\nThis is Helgen. I used to be sweet on a girl from here. Wonder if Vilod is still making that mead with juniper berries mixed in. Funny...when I was a boy, Imperial walls and towers used to make me feel so safe.");
+        narrate("A man and son watch the prisoners pull into town.");
+        dialog("Haming", "Who are they, daddy? Where are they going?");
+        dialog("Torolf", "You need to go inside, little cub.");
+        dialog("Haming", "Why? I want to watch the soldiers.");
+        dialog("Torolf", "Inside the house. Now.");
+        narrate("The wagon stops near the chopping block.");
+        dialog("Imperial Soldier", "Whoa.");
+        wait(Duration::from_secs(2));
+        dialog("Lokir", "Why are they stopping?");
+        dialog(
+            "Ralof",
+            "Why do you think? End of the line. Let's go. Shouldn't keep the gods waiting for us.",
+        );
+        dialog("Lokir", "No! Wait! We're not rebels!");
+        dialog("Ralof", "Face your death with some courage, thief.");
+        narrate("Under the Imperials' watchful eye, the prisoners start jumping out.");
+        dialog(
+            "Lokir",
+            "You've got to tell them! We weren't with you! This is a mistake!",
+        );
+        dialog(
+            "Imperial Captain",
+            "Step toward the block when we call your name. One at a time!",
+        );
+        dialog("Ralof", "Empire loves their damn lists.");
+        dialog("Hadvar", "Ulfric Stormcloak. Jarl of Windhelm.");
+        dialog("Ralof", "It has been an honor, Jarl Ulfric!");
+        dialog("Hadvar", "Ralof of Riverwood. Lokir of Rorikstead.");
+        dialog("Lokir", "No, I'm not a rebel! You can't do this!");
+        narrate("Lokir makes a break for it.");
+        dialog("Imperial Captain", "Halt!");
+        dialog("Lokir", "You're not going to kill me!");
+        dialog("Imperial Captain", "Archers!");
+        wait(Duration::from_secs(2));
+        narrate("Lokir is downed with one bowshot.");
+        dialog("Imperial Captain", "Anyone else feel like running?");
+        dialog("Hadvar", "Wait, you there. Step forward. Who are you?");
     }
 
     // player customization //
     println!("");
     let mut gender = Gender::Male;
     loop {
-        match &input_new::<String>().repeat_msg(&format!("Gender ({}): ", list_options(&["male", "female"]))).get().trim().to_lowercase()[..] {
+        match &input_new::<String>()
+            .repeat_msg(&format!(
+                "Gender ({}): ",
+                list_options(&["(m)ale", "(f)emale"])
+            ))
+            .get()
+            .trim()
+            .to_lowercase()[..]
+        {
             "m" | "male" => {
                 gender = Gender::Male;
                 break;
@@ -124,7 +159,9 @@ fn prologue() {
                 break;
             }
             _ => {
-                println!("Not a valid gender. Choose male or female. Note: there are only two genders.");
+                println!(
+                    "Not a valid gender. Choose male or female. Note: there are only two genders."
+                );
             }
         }
     }
@@ -133,7 +170,10 @@ fn prologue() {
     loop {
         name = input_new().repeat_msg("Name (first): ").get();
         println!("{}", Green.paint(&name));
-        let yn: char = input_new().repeat_msg(&format!("Keep (y/n)? ")).add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n').get();
+        let yn: char = input_new()
+            .repeat_msg(&format!("Keep (y/n)? "))
+            .add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n')
+            .get();
         match yn {
             'Y' | 'y' => break,
             'N' | 'n' => continue,
@@ -143,7 +183,9 @@ fn prologue() {
 
     let mut race = Race::HighElf;
     loop {
-        let race_input: String = input_new().repeat_msg(&format!("Race ({}): ", Yellow.paint("?"))).get();
+        let race_input: String = input_new()
+            .repeat_msg(&format!("Race ({}): ", Yellow.paint("?")))
+            .get();
         match &race_input.trim().to_lowercase()[..] {
             "high elf" => race = Race::HighElf,
             "argonian" => race = Race::Argonian,
@@ -156,7 +198,13 @@ fn prologue() {
             "orc" => race = Race::Orc,
             "redguard" => race = Race::Redguard,
             "?" | "" => {
-                println!("{}", list_options(&["High Elf", "Argonian", "Wood Elf", "Breton", "Dark Elf", "Imperial", "Khajit", "Nord", "Orc", "Redguard"]));
+                println!(
+                    "{}",
+                    list_options(&[
+                        "High Elf", "Argonian", "Wood Elf", "Breton", "Dark Elf", "Imperial",
+                        "Khajit", "Nord", "Orc", "Redguard"
+                    ])
+                );
                 println!("");
                 continue;
             }
@@ -178,9 +226,16 @@ fn prologue() {
             Race::Orc => "The people of the Wrothgarian and Dragontail Mountains, Orcish smiths are prized for their craftsmanship. Orc troops in Heavy Armor are among the finest in the Empire, and are fearsome when using their Berserker Rage.",
             Race::Redguard => "The most naturally talented warriors in Tamriel, the Redguards of Hammerfell have a hardy constitution and a natural resistance to poison. They can call upon an Adrenaline Rush in combat.",
         };
-        println!("{}: {}", Style::new().bold().paint("Description"), description);
+        println!(
+            "{}: {}",
+            Style::new().bold().paint("Description"),
+            description
+        );
 
-        let yn: char = input_new().repeat_msg(&format!("Keep (y/n)? ")).add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n').get();
+        let yn: char = input_new()
+            .repeat_msg(&format!("Keep (y/n)? "))
+            .add_test(|&c| c == 'Y' || c == 'y' || c == 'N' || c == 'n')
+            .get();
         match yn {
             'Y' | 'y' => break,
             'N' | 'n' => continue,
@@ -192,7 +247,7 @@ fn prologue() {
     let mut player = Player::new(&name, race, gender);
 
     if true {
-    dialog("Hadvar", match race {
+        dialog("Hadvar", match race {
         Race::HighElf => "You're not with the Thalmor Embassy, are you, high elf? No, that can't be right...",
         Race::Argonian => "Are you a relative of one of the Riften dock workers, Argonian?",
         Race::WoodElf => "Not many wood elves would choose to come alone to Skyrim.",
@@ -204,79 +259,135 @@ fn prologue() {
         Race::Orc => "You from one of the strongholds, Orc? How did you end up here?",
         Race::Redguard => "What are you doing here, Redguard? You a sellsword? A sailor from Stros M'kai?",
     });
-    dialog("Hadvar", &format!("Captain, what should we do? {}'s not on the list.", gender.he_she(true)));
-    dialog("Imperial Captain", &format!("Forget the list. {} goes to the block.", gender.he_she(true)));
-    dialog("Hadvar", "By your orders, captain.");
-    dialog("Hadvar", match race {
-        Race::HighElf => "I'm sorry. We'll make sure your remains are returned to the Summerset Isle.",
-        Race::Argonian => "I'm sorry. We'll make sure your remains are returned to Black Marsh.",
-        Race::WoodElf => "I'm sorry. We'll make sure your remains are returned to Valenwood.",
-        Race::Breton => "I'm sorry. We'll make sure your remains are returned to High Rock.",
-        Race::DarkElf => "I'm sorry. We'll make sure your remains are returned to Morrowind.",
-        Race::Imperial => "I'm sorry. We'll make sure your remains are returned to Cyrodiil.",
-        Race::Khajit => "I'm sorry. We'll make sure your remains are returned to Elsweyr.",
-        Race::Nord => "I'm sorry. At least you'll die here, in your homeland.",
-        Race::Orc => "I'm sorry. We'll make sure your remains are returned to Orsinium.",
-        Race::Redguard => "I'm sorry. We'll make sure your remains are returned to Hammerfell.",
-    });
-    dialog("Hadvar", "Follow the Captain, prisoner.");
-    narrate("You go to stand with the other waiting prisoners by the block.");
-    dialog("Tullius", "Ulfric Stormcloak. Some here in Helgen call you a hero, but a hero doesn't use a power like the Voice to murder his king and usurp his throne.");
-    dialog("Jarl Ulfric Stormcloak", "(grunting protest)");
-    dialog("Tullius", "You started this war, plunged Skyrim into chaos and now the Empire is going to put you down, and restore the peace.");
-    narrate("A distant noise booms down the mountainside.");
-    dialog("Hadvar", "What was that?");
-    dialog("Tullius", "It's nothing. Carry on.");
-    dialog("Imperial Captain", "Yes, General Tullius. Give them their last rites.");
-    dialog("Priestess of Arkay", "As we commend your souls to Aetherius, blessings of the Eight Divines upon you, for you are the salt and earth of Nirn, our beloved--");
-    narrate("One of the prisoners from the lead wagon walks forward.");
-    dialog("Stormcloak Soldier", "For the love of Talos, shut up and lets get this over with.");
-    dialog("Priestess of Arkay", "As you wish...");
-    wait(Duration::from_secs(4));
-    dialog("Stormcloak Soldier", "Come on, I haven't got all morning. My ancestors are smiling at me, Imperials. Can you say the same?");
-    narrate("They behead the Stormcloak, eliciting responses from the onlookers.");
-    dialog("Stormcloak Solider 2", "You Imperial bastards!");
-    dialog("Vilod", "Justice!");
-    dialog("Ingrid", "Death to the Stormcloaks!");
-    dialog("Ralof", "As fearless in death as he was in life.");
-    dialog("Imperial Captain", match race {
-        Race::HighElf => "Next, the high elf!",
-        Race::Argonian => "Next, the lizard!",
-        Race::WoodElf => "Next, the wood elf!",
-        Race::Breton => "Next, the Breton!",
-        Race::DarkElf => "Next, the dark elf!",
-        Race::Imperial => "Next, the renegade from Cyrodiil!",
-        Race::Khajit => "Next, the cat!",
-        Race::Nord => "Next, the Nord in the rags!",
-        Race::Orc => "Next, the Orc!",
-        Race::Redguard => "Next, the Redguard!",
-    });
-    narrate("Another cry rings out on the mountainside, this time much closer.");
-    dialog("Hadvar", "There it is again. Did you hear that?");
-    dialog("Imperial Captain", "I said, next prisoner!");
-    dialog("Hadvar", "To the block, prisoner. Nice and easy.");
-    narrate("The player is brought to the chopping block. A large creature swoops over the southern peaks, barreling toward Helgen.");
-    dialog("Tullius", "What in Oblivion is that?");
-    dialog("Imperial Captain", "Sentries! What do you see?");
-    dialog("Imperial Soldier", "It's in the clouds!");
-    narrate("The creature, now identified as a dragon, lands on the watchtower next to the block, rumbling the ground and surprising the onlookers.");
-    dialog("Stormcloak Solider", "Dragon!");
-    narrate("The dragon uses its voice on the crowd, killing the headsman.");
-    dialog("Headsman", "Nngh!");
-    dialog("Tullius", "Don't just stand there, kill that thing! Guards, get the townspeople to safety!");
-    dialog("Ralof", "Get up! Come on, the gods won't give us another chance!");
-    dialog("Ralof", "This way!");
-    narrate("Ralof leads you to a tower where the other prisoners are hiding.");
-    dialog("Ralof", "Jarl Ulfric! What is that thing? Could the legends be true?");
-    dialog("Ulfric", "Legends don't burn down villages. We need to move, now!");
-    dialog("Ralof", "Up through the tower. Let's go! This way, friend! Move!");
-    dialog("Stormcloak Soldier", "We just need to move some of these rocks to clear the way!");
-    narrate("The dragon, Alduin, breaks in through the wall, blasting fire everywhere.");
-    dialog("Ralof", "Get back!");
-    dialog("Alduin", "Toor shul!");
-    wait(Duration::from_secs(3));
-    narrate("They survey the damage when the dragon leaves.");
-    dialog("Ralof", "See the inn on the other side? Jump through the roof and keep going! Go! We'll follow you when we can!");
+        dialog(
+            "Hadvar",
+            &format!(
+                "Captain, what should we do? {}'s not on the list.",
+                gender.he_she(true)
+            ),
+        );
+        dialog(
+            "Imperial Captain",
+            &format!(
+                "Forget the list. {} goes to the block.",
+                gender.he_she(true)
+            ),
+        );
+        dialog("Hadvar", "By your orders, captain.");
+        dialog(
+            "Hadvar",
+            match race {
+                Race::HighElf => {
+                    "I'm sorry. We'll make sure your remains are returned to the Summerset Isle."
+                }
+                Race::Argonian => {
+                    "I'm sorry. We'll make sure your remains are returned to Black Marsh."
+                }
+                Race::WoodElf => {
+                    "I'm sorry. We'll make sure your remains are returned to Valenwood."
+                }
+                Race::Breton => {
+                    "I'm sorry. We'll make sure your remains are returned to High Rock."
+                }
+                Race::DarkElf => {
+                    "I'm sorry. We'll make sure your remains are returned to Morrowind."
+                }
+                Race::Imperial => {
+                    "I'm sorry. We'll make sure your remains are returned to Cyrodiil."
+                }
+                Race::Khajit => "I'm sorry. We'll make sure your remains are returned to Elsweyr.",
+                Race::Nord => "I'm sorry. At least you'll die here, in your homeland.",
+                Race::Orc => "I'm sorry. We'll make sure your remains are returned to Orsinium.",
+                Race::Redguard => {
+                    "I'm sorry. We'll make sure your remains are returned to Hammerfell."
+                }
+            },
+        );
+        dialog("Hadvar", "Follow the Captain, prisoner.");
+        narrate("You go to stand with the other waiting prisoners by the block.");
+        dialog("Tullius", "Ulfric Stormcloak. Some here in Helgen call you a hero, but a hero doesn't use a power like the Voice to murder his king and usurp his throne.");
+        dialog("Jarl Ulfric Stormcloak", "(grunting protest)");
+        dialog("Tullius", "You started this war, plunged Skyrim into chaos and now the Empire is going to put you down, and restore the peace.");
+        narrate("A distant noise booms down the mountainside.");
+        dialog("Hadvar", "What was that?");
+        dialog("Tullius", "It's nothing. Carry on.");
+        dialog(
+            "Imperial Captain",
+            "Yes, General Tullius. Give them their last rites.",
+        );
+        dialog("Priestess of Arkay", "As we commend your souls to Aetherius, blessings of the Eight Divines upon you, for you are the salt and earth of Nirn, our beloved--");
+        narrate("One of the prisoners from the lead wagon walks forward.");
+        dialog(
+            "Stormcloak Soldier",
+            "For the love of Talos, shut up and lets get this over with.",
+        );
+        dialog("Priestess of Arkay", "As you wish...");
+        wait(Duration::from_secs(4));
+        dialog("Stormcloak Soldier", "Come on, I haven't got all morning. My ancestors are smiling at me, Imperials. Can you say the same?");
+        narrate("They behead the Stormcloak, eliciting responses from the onlookers.");
+        dialog("Stormcloak Solider 2", "You Imperial bastards!");
+        dialog("Vilod", "Justice!");
+        dialog("Ingrid", "Death to the Stormcloaks!");
+        dialog("Ralof", "As fearless in death as he was in life.");
+        dialog(
+            "Imperial Captain",
+            match race {
+                Race::HighElf => "Next, the high elf!",
+                Race::Argonian => "Next, the lizard!",
+                Race::WoodElf => "Next, the wood elf!",
+                Race::Breton => "Next, the Breton!",
+                Race::DarkElf => "Next, the dark elf!",
+                Race::Imperial => "Next, the renegade from Cyrodiil!",
+                Race::Khajit => "Next, the cat!",
+                Race::Nord => "Next, the Nord in the rags!",
+                Race::Orc => "Next, the Orc!",
+                Race::Redguard => "Next, the Redguard!",
+            },
+        );
+        narrate("Another cry rings out on the mountainside, this time much closer.");
+        dialog("Hadvar", "There it is again. Did you hear that?");
+        dialog("Imperial Captain", "I said, next prisoner!");
+        dialog("Hadvar", "To the block, prisoner. Nice and easy.");
+        narrate("The player is brought to the chopping block. A large creature swoops over the southern peaks, barreling toward Helgen.");
+        dialog("Tullius", "What in Oblivion is that?");
+        dialog("Imperial Captain", "Sentries! What do you see?");
+        dialog("Imperial Soldier", "It's in the clouds!");
+        narrate("The creature, now identified as a dragon, lands on the watchtower next to the block, rumbling the ground and surprising the onlookers.");
+        dialog("Stormcloak Solider", "Dragon!");
+        narrate("The dragon uses its voice on the crowd, killing the headsman.");
+        dialog("Headsman", "Nngh!");
+        dialog(
+            "Tullius",
+            "Don't just stand there, kill that thing! Guards, get the townspeople to safety!",
+        );
+        dialog(
+            "Ralof",
+            "Get up! Come on, the gods won't give us another chance!",
+        );
+        dialog("Ralof", "This way!");
+        narrate("Ralof leads you to a tower where the other prisoners are hiding.");
+        dialog(
+            "Ralof",
+            "Jarl Ulfric! What is that thing? Could the legends be true?",
+        );
+        dialog(
+            "Ulfric",
+            "Legends don't burn down villages. We need to move, now!",
+        );
+        dialog(
+            "Ralof",
+            "Up through the tower. Let's go! This way, friend! Move!",
+        );
+        dialog(
+            "Stormcloak Soldier",
+            "We just need to move some of these rocks to clear the way!",
+        );
+        narrate("The dragon, Alduin, breaks in through the wall, blasting fire everywhere.");
+        dialog("Ralof", "Get back!");
+        dialog("Alduin", "Toor shul!");
+        wait(Duration::from_secs(3));
+        narrate("They survey the damage when the dragon leaves.");
+        dialog("Ralof", "See the inn on the other side? Jump through the roof and keep going! Go! We'll follow you when we can!");
     }
 
     loop {
@@ -306,16 +417,36 @@ fn prologue() {
     dialog("Vilod", "Tell my family I fought bravely!");
     dialog("Tullius", "Hadvar! Into the keep, solider, we're leaving!");
     dialog("Hadvar", "It's you and me, prisoner, stay close!");
-    dialog("Imperial Soldier", "How in Oblivion do we kill this thing? Just...die!");
+    dialog(
+        "Imperial Soldier",
+        "How in Oblivion do we kill this thing? Just...die!",
+    );
     narrate("Near the keep, Ralof is seen.");
     dialog("Hadvar", "Ralof! You damned traitor, out of my way!");
-    dialog("Ralof", "We're escaping, Hadvar! You're not stopping us this time.");
-    dialog("Hadvar", "Fine. I hope that dragon takes you all to Sovngarde.");
+    dialog(
+        "Ralof",
+        "We're escaping, Hadvar! You're not stopping us this time.",
+    );
+    dialog(
+        "Hadvar",
+        "Fine. I hope that dragon takes you all to Sovngarde.",
+    );
     dialog("Ralof", "You, come on! Into the keep!");
-    dialog("Hadvar", "With me, prisoner! Let's go! Come on! We need to get inside!");
+    dialog(
+        "Hadvar",
+        "With me, prisoner! Let's go! Come on! We need to get inside!",
+    );
 
     loop {
-        match &input_new::<String>().repeat_msg(&format!("Choose ({}): ", list_options(&["Hadvar", "Ralof"]))).get().trim().to_lowercase()[..] {
+        match &input_new::<String>()
+            .repeat_msg(&format!(
+                "Choose ({}): ",
+                list_options(&["Hadvar", "Ralof"])
+            ))
+            .get()
+            .trim()
+            .to_lowercase()[..]
+        {
             "hadvar" => {
                 narrate("Coming soon :)");
                 break;
@@ -332,10 +463,19 @@ fn prologue() {
 fn branch_ralof(player: &mut Player) {
     narrate("Upon entering the keep, Ralof goes to check on a fallen comrade.");
     dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
-    
-    let chest = Container::new("Chest", vec!(&IMPERIAL_SWORD));
+
+    let chest = Container::new("Chest", vec![&IMPERIAL_SWORD]);
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep cause tiny particles to be shaken from the walls.", None, Some(vec!(chest)));
+
     loop {
-        process_command(&input_new::<String>().repeat_msg(">").get().trim(), player, &mut room);
+        process_command(
+            &input_new::<String>().repeat_msg(">").get().trim(),
+            player,
+            &mut room,
+        );
+
+        if player.inventory_weapons().contains(&&IMPERIAL_SWORD) {
+            break;
+        }
     }
 }
