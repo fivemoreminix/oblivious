@@ -111,7 +111,7 @@ pub struct Player {
     name: String,
     race: Race,
     gender: Gender,
-    pub inventory: Vec<&'static Item>,
+    pub inventory: Container,
     max_health: u32,
     max_stamina: u32,
     max_magicka: u32,
@@ -126,7 +126,7 @@ impl Player {
             name: name.to_owned(),
             race,
             gender,
-            inventory: Vec::new(),
+            inventory: Container::new("Inventory", Vec::new()),
             max_health: 100,
             max_stamina: 100,
             max_magicka: 100,
@@ -138,6 +138,7 @@ impl Player {
 
     pub fn inventory_weapons(&self) -> Vec<&Weapon> {
         self.inventory
+            .items
             .iter()
             .filter_map(|i| match i.intrinsic() {
                 ItemType::Weapon(weapon) => Some(weapon),
@@ -247,17 +248,61 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 )
             );
         }
-    } else if cmd.contains("inventory") {
-        println!(
-            "Items: {}",
-            list_options(
-                &player
-                    .inventory
-                    .iter()
-                    .map(|item| item.name())
-                    .collect::<Vec<&str>>()
-            )
-        );
+    } else if cmd.starts_with("inventory") {
+        let words: Vec<&str> = cmd.split_whitespace().collect();
+        let mut inventory: &Container = &player.inventory;
+        
+        if words.len() > 1 {
+            let container_name = words[1].to_lowercase();
+            let mut found_container = false;
+
+            for container in &current_room.containers {
+                if container.name.to_lowercase() == container_name {
+                    inventory = container;
+                    found_container = true;
+                }
+            }
+
+            if !found_container {
+                println!("Usage: `inventory [container]` where you can optionally list a container to see inside of.");
+                return;
+            }
+        } else if words.len() == 1 {
+            inventory = &player.inventory;
+        } else {
+            println!("Usage: `inventory [container]` where you can optionally list a container to see inside of.");
+            return;
+        }
+
+        if inventory.items.is_empty() {
+            println!("No items in {}", &inventory.name);
+        } else {
+            println!(
+                "Items: {}",
+                list_options(
+                    &inventory
+                        .items
+                        .iter()
+                        .map(|item| item.name())
+                        .collect::<Vec<&str>>()
+                )
+            );
+        }
+    } else if cmd.starts_with("itake") {
+        // itake <container> <items> : itake chest "imperial sword" pot
+        let mut words = cmd.split_whitespace();
+        if !words.clone().collect::<Vec<&str>>().len() >= 3 {
+            println!("Usage: `itake <container> <item1>` where items can be one or a list of item names to take from the given container.");
+        } else {
+            words.next().unwrap(); // consume "itake"
+            let container_name = words.next().unwrap();
+
+            while let Some(name) = words.next() {
+                if name.starts_with("\"") && name.ends_with("\"") {
+                    let name = &name[1..name.len()-1];
+                }
+            }
+        }
     } else if cmd.starts_with("take") {
         let item_names: Vec<&str> = cmd.split_whitespace().collect();
         if item_names.len() > 1 {
@@ -271,7 +316,7 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 }
             }
 
-            player.inventory.extend(&items);
+            player.inventory.items.extend(&items);
             for item in &items {
                 // or remove items from room here
             }
