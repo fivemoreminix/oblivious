@@ -7,9 +7,16 @@ extern crate version;
 extern crate ansi_term;
 extern crate read_input;
 
+mod items;
 mod definitions;
+mod game;
+mod player;
 
+use self::items::*;
+use self::items::apparel::*;
 use self::definitions::*;
+use self::game::*;
+use self::player::*;
 
 use ansi_term::Colour::*;
 use ansi_term::Style;
@@ -462,12 +469,17 @@ fn prologue() {
     }
 }
 
+fn branch_hadvar(player: &mut Player) {
+    dialog("Hadvar", "Looks like we're the only ones who made it. Was that really a dragon? The bringers of the End Times? We should keep moving. Come here. Let me see if I can get those bindings off. There you go. Take a look around, there should be plenty of gear to choose from. I'm going to see if I can find something for these burns. You better get that armor on. Give sword a few swings, too. Let's keep moving. That thing is still out there. Come on, this way.")
+    
+}
+
 fn branch_ralof(player: &mut Player) {
     narrate("Upon entering the keep, Ralof goes to check on a fallen comrade.");
     dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
 
     let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
-    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", None, Some(vec!(chest)));
+    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
 
     loop {
         process_command(
