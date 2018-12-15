@@ -222,9 +222,9 @@ impl<'a> ApparelPlacement<'a> {
         match garment.position() {
             Head => match self.head {
                 Some(other) => {
-                    let ret = self.dequip(Head);
+                    let ret = self.dequip_garment(other);
                     self.head = Some(garment);
-                    ret
+                    Some(vec!(ret))
                 }
                 None => {
                     self.head = Some(garment);
@@ -233,9 +233,9 @@ impl<'a> ApparelPlacement<'a> {
             }
             Torso => match self.torso {
                 Some(other) => {
-                    let ret = self.dequip(Torso);
+                    let ret = self.dequip_garment(other);
                     self.torso = Some(garment);
-                    ret
+                    Some(vec!(ret))
                 }
                 None => {
                     self.torso = Some(garment);
@@ -244,9 +244,9 @@ impl<'a> ApparelPlacement<'a> {
             }
             Hands => match self.hands {
                 Some(other) => {
-                    let ret = self.dequip(Hands);
+                    let ret = self.dequip_garment(other);
                     self.hands = Some(garment);
-                    ret
+                    Some(vec!(ret))
                 }
                 None => {
                     self.hands = Some(garment);
@@ -255,9 +255,9 @@ impl<'a> ApparelPlacement<'a> {
             }
             Legs => match self.legs {
                 Some(other) => {
-                    let ret = self.dequip(Legs);
+                    let ret = self.dequip_garment(other);
                     self.legs = Some(garment);
-                    ret
+                    Some(vec!(ret))
                 }
                 None => {
                     self.legs = Some(garment);
@@ -266,9 +266,9 @@ impl<'a> ApparelPlacement<'a> {
             }
             Feet => match self.feet {
                 Some(other) => {
-                    let ret = self.dequip(Feet);
+                    let ret = self.dequip_garment(other);
                     self.feet = Some(garment);
-                    ret
+                    Some(vec!(ret))
                 }
                 None => {
                     self.feet = Some(garment);
@@ -276,48 +276,19 @@ impl<'a> ApparelPlacement<'a> {
                 }
             }
             Tunic => {
-                let mut items = Vec::new();
-                match self.equip(Torso) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                match self.equip(Legs) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                if items.is_empty() {
-                    None
-                } else {
-                    Some(items)
-                }
+                let ret = self.dequip(Tunic);
+                self.torso = Some(garment);
+                self.legs = Some(garment);
+                ret
             }
             Full => {
-                let mut items = Vec::new();
-                match self.equip(Head) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                match self.equip(Torso) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                match self.equip(Hands) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                match self.equip(Legs) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                match self.equip(Feet) {
-                    Some(g) => items.extend(g),
-                    _ => {}
-                }
-                if items.is_empty() {
-                    None
-                } else {
-                    Some(items)
-                }
+                let ret = self.dequip(Full);
+                self.head = Some(garment);
+                self.torso = Some(garment);
+                self.hands = Some(garment);
+                self.legs = Some(garment);
+                self.feet = Some(garment);
+                ret
             }
         }
     }
