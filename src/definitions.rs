@@ -98,11 +98,13 @@ impl Gender {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ItemType<'a> {
     Weapon(&'a Weapon),
+    Clothing(&'a Clothing),
+    Armor(&'a Armor),
 }
 
 pub trait Item {
     fn name(&self) -> &str;
-    fn weight(&self) -> f32;
+    fn weight(&self) -> u16;
     fn value(&self) -> u16;
     fn intrinsic(&self) -> ItemType;
 }
@@ -152,7 +154,7 @@ impl Player {
 pub struct Weapon {
     name: &'static str,
     base_damage: u16,
-    weight: f32,
+    weight: u16,
     value: u16,
 }
 
@@ -161,7 +163,7 @@ impl Item for Weapon {
         &self.name
     }
 
-    fn weight(&self) -> f32 {
+    fn weight(&self) -> u16 {
         self.weight
     }
 
@@ -174,9 +176,66 @@ impl Item for Weapon {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Clothing {
+    name: &'static str,
+    weight: u16,
+    value: u16,
+}
+
+impl Item for Clothing {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
+    fn weight(&self) -> u16 {
+        self.weight
+    }
+
+    fn value(&self) -> u16 {
+        self.value
+    }
+
+    fn intrinsic(&self) -> ItemType {
+        ItemType::Clothing(&self)
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Armor {
+    name: &'static str,
+    base_armor: u16,
+    weight: u16,
+    value: u16,
+}
+
+impl Armor {
+    pub fn armor(&self) -> u16 {
+        self.base_armor
+    }
+}
+
+impl Item for Armor {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
+    fn weight(&self) -> u16 {
+        self.weight
+    }
+
+    fn value(&self) -> u16 {
+        self.value
+    }
+
+    fn intrinsic(&self) -> ItemType {
+        ItemType::Armor(&self)
+    }
+}
+
 pub struct Container {
     name: String,
-    items: Vec<&'static Item>,
+    pub items: Vec<&'static Item>,
 }
 
 impl Container {
@@ -396,6 +455,18 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
 pub static IMPERIAL_SWORD: Weapon = Weapon {
     name: "Imperial Sword",
     base_damage: 8,
-    weight: 10.,
+    weight: 10,
     value: 23,
+};
+
+pub static FOOTWRAPS: Clothing = Clothing {
+    name: "Footwraps",
+    weight: 1,
+    value: 1,
+};
+
+pub static ROUGHSPUN_TUNIC: Clothing = Clothing {
+    name: "Roughspun Tunic",
+    weight: 1,
+    value: 1,
 };

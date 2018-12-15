@@ -245,6 +245,8 @@ fn prologue() {
     println!(""); // end character customization with blank line
 
     let mut player = Player::new(&name, race, gender);
+    player.inventory.items.push(&ROUGHSPUN_TUNIC);
+    player.inventory.items.push(&FOOTWRAPS);
 
     if true {
         dialog("Hadvar", match race {
