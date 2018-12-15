@@ -218,11 +218,49 @@ impl Room {
     }
 }
 
+pub fn split_whitespace_with_quotes(text: &str) -> Vec<String> {
+    let mut items = Vec::new();
+    let mut chars = text.chars().peekable();
+
+    while let Some(c) = chars.next() {
+        if !c.is_whitespace() {
+            match c {
+                '"' => {
+                    let mut string = String::new();
+                    while let Some(c) = chars.next() {
+                        if c == '"' {
+                            break;
+                        } else {
+                            string.push(c);
+                        }
+                    }
+
+                    items.push(string);
+                }
+                _ => {
+                    let mut word = c.to_string();
+                    while let Some(&pc) = chars.peek() {
+                        if pc == '"' || pc.is_whitespace() {
+                            break;
+                        } else {
+                            word.push(chars.next().unwrap());
+                        }
+                    }
+
+                    items.push(word);
+                }
+            }
+        }
+    }
+
+    items
+}
+
 pub fn process_command(command: &str, player: &mut Player, current_room: &mut Room) {
     let cmd = command.to_lowercase();
     if cmd.contains("help") {
-        println!("Commands: {}", list_options(&["look", "inventory", "take <items>"]));
-    } else if cmd.contains("look") {
+        println!("Commands: {}", list_options(&["look", "inventory [container]", "take <items>", "ctake <container> <items>"]));
+    } else if cmd.starts_with("look") {
         println!("{}", &current_room.description);
         if current_room.items.len() > 0 {
             println!(
@@ -288,20 +326,47 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 )
             );
         }
-    } else if cmd.starts_with("itake") {
-        // itake <container> <items> : itake chest "imperial sword" pot
-        let mut words = cmd.split_whitespace();
-        if !words.clone().collect::<Vec<&str>>().len() >= 3 {
-            println!("Usage: `itake <container> <item1>` where items can be one or a list of item names to take from the given container.");
+    } else if cmd.starts_with("ctake") {
+        let words = split_whitespace_with_quotes(&cmd);
+        if words.len() < 3 {
+            println!("{}", words.len());
+            println!("Usage: `ctake <container> <items>` where items can be one or a list of item names to take from the given container.");
         } else {
-            words.next().unwrap(); // consume "itake"
+            let mut words = words.iter();
+            words.next().unwrap(); // consume "ctake"
             let container_name = words.next().unwrap();
 
-            while let Some(name) = words.next() {
-                if name.starts_with("\"") && name.ends_with("\"") {
-                    let name = &name[1..name.len()-1];
+            let mut inventory: &Container = &player.inventory;
+            let mut found_container = false;
+
+            for container in &current_room.containers {
+                if &container.name.to_lowercase() == container_name {
+                    inventory = container;
+                    found_container = true;
                 }
             }
+
+            if !found_container {
+                println!("Could not find given container\nUsage: `ctake <container> <items>` where items can be one or a list of item names to take from the given container.");
+                return;
+            }
+
+            let mut item_names = Vec::new();
+            for name in words {
+                item_names.push(name);
+            }
+
+            let mut items = Vec::<&Item>::new();
+            for item in &item_names {
+                for &citem in &inventory.items {
+                    if item == &&citem.name().to_lowercase() {
+                        items.push(citem);
+                        // remove items in room
+                    }
+                }
+            }
+
+            player.inventory.items.extend(&items);
         }
     } else if cmd.starts_with("take") {
         let item_names: Vec<&str> = cmd.split_whitespace().collect();

@@ -465,7 +465,7 @@ fn branch_ralof(player: &mut Player) {
     dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
 
     let chest = Container::new("Chest", vec![&IMPERIAL_SWORD]);
-    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep cause tiny particles to be shaken from the walls.", None, Some(vec!(chest)));
+    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", None, Some(vec!(chest)));
 
     loop {
         process_command(
