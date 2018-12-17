@@ -12,6 +12,7 @@ pub struct Player {
     health: u32,
     stamina: u32,
     magicka: u32,
+    pub apparel: ApparelPlacement,
 }
 
 impl Player {
@@ -27,8 +28,23 @@ impl Player {
             health: 100,
             stamina: 100,
             magicka: 100,
+            apparel: ApparelPlacement::new(),
         }
     }
+
+    // pub fn inventory_apparel(&self) -> Vec<&impl Apparel> {
+    //     self.inventory
+    //         .items
+    //         .iter()
+    //         .filter_map(|i| {
+    //             let ret: Option<&impl Apparel> = match i.intrinsic() {
+    //                 ItemType::Clothing(v) | ItemType::Armor(v) => Some(v),
+    //                 _ => None,
+    //             }
+    //             ret
+    //         })
+    //         .collect()
+    // }
 
     pub fn inventory_weapons(&self) -> Vec<&Weapon> {
         self.inventory

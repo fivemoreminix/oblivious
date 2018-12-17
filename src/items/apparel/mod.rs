@@ -1,8 +1,16 @@
 use super::*;
 use super::super::definitions::*;
 
+use std::fmt;
+
 pub trait Apparel: Item {
     fn position(&self) -> ApparelPos;
+}
+
+impl fmt::Debug for Apparel {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self.name())
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -14,15 +22,19 @@ pub enum ApparelPos {
 }
 
 #[derive(Clone)]
-pub struct ApparelPlacement<'a> {
-    head: Option<&'a Apparel>,
-    torso: Option<&'a Apparel>,
-    hands: Option<&'a Apparel>,
-    feet: Option<&'a Apparel>,
+pub struct ApparelPlacement {
+    pub head: Option<Apparel>,
+    pub torso: Option<Apparel>,
+    pub hands: Option<Apparel>,
+    pub feet: Option<Apparel>,
 }
 
-impl<'a> ApparelPlacement<'a> {
-    fn dequip_garment(&mut self, garment: &'a Apparel) -> &'a Apparel {
+impl ApparelPlacement {
+    pub fn new() -> Self {
+        Self { head: None, torso: None, hands: None, feet: None }
+    }
+
+    fn dequip_garment(&mut self, garment: &Apparel) -> &Apparel {
         use self::ApparelPos::*;
         match garment.position() {
             Head => self.head = None,
@@ -33,7 +45,7 @@ impl<'a> ApparelPlacement<'a> {
         garment
     }
 
-    pub fn dequip(&mut self, position: ApparelPos) -> Option<Vec<&'a Apparel>> {
+    pub fn dequip(&mut self, position: ApparelPos) -> Option<Vec<Apparel>> {
         use self::ApparelPos::*;
         match position {
             Head => match self.head {
@@ -55,7 +67,7 @@ impl<'a> ApparelPlacement<'a> {
         }
     }
 
-    pub fn equip(&mut self, garment: &'a Apparel) -> Option<Vec<&'a Apparel>> {
+    pub fn equip(&mut self, garment: Apparel) -> Option<Vec<Apparel>> {
         use self::ApparelPos::*;
         match garment.position() {
             Head => match self.head {

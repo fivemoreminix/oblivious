@@ -252,8 +252,8 @@ fn prologue() {
     println!(""); // end character customization with blank line
 
     let mut player = Player::new(&name, race, gender);
-    player.inventory.items.push(&ROUGHSPUN_TUNIC);
-    player.inventory.items.push(&FOOTWRAPS);
+    player.apparel.equip(&ROUGHSPUN_TUNIC);
+    player.apparel.equip(&FOOTWRAPS);
 
     if true {
         dialog("Hadvar", match race {
@@ -470,8 +470,22 @@ fn prologue() {
 }
 
 fn branch_hadvar(player: &mut Player) {
-    dialog("Hadvar", "Looks like we're the only ones who made it. Was that really a dragon? The bringers of the End Times? We should keep moving. Come here. Let me see if I can get those bindings off. There you go. Take a look around, there should be plenty of gear to choose from. I'm going to see if I can find something for these burns. You better get that armor on. Give sword a few swings, too. Let's keep moving. That thing is still out there. Come on, this way.")
-    
+    dialog("Hadvar", "Looks like we're the only ones who made it. Was that really a dragon? The bringers of the End Times? We should keep moving. Come here. Let me see if I can get those bindings off. There you go. Take a look around, there should be plenty of gear to choose from. I'm going to see if I can find something for these burns. You better get that armor on. Give sword a few swings, too. Let's keep moving. That thing is still out there. Come on, this way.");
+
+    let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
+    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
+
+    loop {
+        process_command(
+            &input_new::<String>().repeat_msg(">").get().trim(),
+            player,
+            &mut room,
+        );
+
+        if player.inventory_weapons().contains(&&IMPERIAL_SWORD) {
+            break;
+        }
+    }
 }
 
 fn branch_ralof(player: &mut Player) {

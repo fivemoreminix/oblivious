@@ -1,5 +1,6 @@
 pub mod apparel;
 
+use std::fmt;
 use crate::definitions::*;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -15,6 +16,12 @@ pub trait Item {
     fn weight(&self) -> u16;
     fn value(&self) -> u16;
     fn intrinsic(&self) -> ItemType;
+}
+
+impl fmt::Debug for Item {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self.name())
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
