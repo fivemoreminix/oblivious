@@ -24,6 +24,12 @@ impl fmt::Debug for Item {
     }
 }
 
+impl PartialEq for Item {
+    fn eq(&self, other: &Item) -> bool {
+        self.name() == other.name()
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Weapon {
     name: &'static str,

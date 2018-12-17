@@ -69,7 +69,7 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             );
         }
     } else if cmd.starts_with("inventory") {
-        let words: Vec<&str> = cmd.split_whitespace().collect();
+        let words: Vec<String> = split_whitespace_with_quotes(&cmd);
         let mut inventory: &Container = &player.inventory;
         
         if words.len() > 1 {
@@ -118,10 +118,10 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             words.next().unwrap(); // consume "ctake"
             let container_name = words.next().unwrap();
 
-            let mut inventory: &Container = &player.inventory;
+            let mut inventory: &mut Container = &mut player.inventory;
             let mut found_container = false;
 
-            for container in &current_room.containers {
+            for container in &mut current_room.containers {
                 if &container.name.to_lowercase() == container_name {
                     inventory = container;
                     found_container = true;
@@ -143,9 +143,13 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 for &citem in &inventory.items {
                     if item == &&citem.name().to_lowercase() {
                         items.push(citem);
-                        // remove items in room
                     }
                 }
+            }
+
+            // remove items from container
+            for item in &items {
+                inventory.items.remove_item(item);
             }
 
             player.inventory.items.extend(&items);
@@ -158,14 +162,16 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 for &room_item in &current_room.items {
                     if item == &room_item.name() {
                         items.push(room_item);
-                        // remove items in room
+                        println!("took room item {:?}", room_item.name());
                     }
                 }
             }
 
             player.inventory.items.extend(&items);
+
+            // remove items from room
             for item in &items {
-                // or remove items from room here
+                current_room.items.remove_item(item);
             }
         } else {
             println!("Usage: `take <items>` where `items` is a list of items in the room to pickup.");

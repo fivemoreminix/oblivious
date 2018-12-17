@@ -1,4 +1,5 @@
 #![feature(duration_float)]
+#![feature(vec_remove_item)]
 #![allow(dead_code)]
 #![allow(unused_assignments)]
 
