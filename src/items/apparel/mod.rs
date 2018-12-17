@@ -23,10 +23,10 @@ pub enum ApparelPos {
 
 #[derive(Clone)]
 pub struct ApparelPlacement {
-    pub head: Option<Apparel>,
-    pub torso: Option<Apparel>,
-    pub hands: Option<Apparel>,
-    pub feet: Option<Apparel>,
+    pub head: Option<&'static Apparel>,
+    pub torso: Option<&'static Apparel>,
+    pub hands: Option<&'static Apparel>,
+    pub feet: Option<&'static Apparel>,
 }
 
 impl ApparelPlacement {
@@ -34,7 +34,7 @@ impl ApparelPlacement {
         Self { head: None, torso: None, hands: None, feet: None }
     }
 
-    fn dequip_garment(&mut self, garment: &Apparel) -> &Apparel {
+    fn dequip_garment(&mut self, garment: &'static Apparel) -> &'static Apparel {
         use self::ApparelPos::*;
         match garment.position() {
             Head => self.head = None,
@@ -45,7 +45,7 @@ impl ApparelPlacement {
         garment
     }
 
-    pub fn dequip(&mut self, position: ApparelPos) -> Option<Vec<Apparel>> {
+    pub fn dequip(&mut self, position: ApparelPos) -> Option<Vec<&'static Apparel>> {
         use self::ApparelPos::*;
         match position {
             Head => match self.head {
@@ -67,7 +67,7 @@ impl ApparelPlacement {
         }
     }
 
-    pub fn equip(&mut self, garment: Apparel) -> Option<Vec<Apparel>> {
+    pub fn equip(&mut self, garment: &'static Apparel) -> Option<Vec<&'static Apparel>> {
         use self::ApparelPos::*;
         match garment.position() {
             Head => match self.head {
