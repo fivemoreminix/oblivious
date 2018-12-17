@@ -17,6 +17,12 @@ pub trait Item {
     fn intrinsic(&self) -> ItemType;
 }
 
+impl PartialEq for Item {
+    fn eq(&self, other: &Item) -> bool {
+        self.name() == other.name()
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Weapon {
     name: &'static str,
