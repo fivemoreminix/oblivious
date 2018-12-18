@@ -13,7 +13,7 @@ pub fn wait(time: Duration) {
     }
 }
 
-static WPM: f64 = 200.;
+static WPM: f64 = 300.;
 static WPS: f64 = WPM / 60.;
 pub fn seconds_to_read(text: &str) -> f64 {
     text.split_whitespace().count() as f64 / WPS

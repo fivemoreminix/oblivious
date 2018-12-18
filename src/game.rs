@@ -50,7 +50,7 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
     let cmd = command.to_lowercase();
     if cmd.starts_with("?") || cmd.contains("help") {
         println!("Commands: {}", list_options(&["look", "inventory [container]", "take <items>", "ctake <container> <items>"]));
-        println!("Tip: For multi-word arguments, use quotation marks. E.x. `take \"iron sword\"`");
+        println!("Tip: For multi-word arguments, use quotation marks. E.x. take \"iron sword\"");
     } else if cmd.starts_with("look") {
         println!("{}", &current_room.description);
         if current_room.items.len() > 0 {
@@ -118,10 +118,10 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 0
             };
             for (k, &v) in &item_quantities {
-                if v > 1 {
-                    output.push_str(&(Blue.paint(v.to_string()).to_string() + "x"));
-                }
                 output.push_str(&Green.paint(k.to_string()).to_string());
+                if v > 1 {
+                    output.push_str(&(" (".to_owned() + &v.to_string() + ")"));
+                }
                 if commas > 0 {
                     output.push_str(", ");
                     commas -= 1;

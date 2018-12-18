@@ -32,6 +32,10 @@ impl Player {
         }
     }
 
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
     // pub fn inventory_apparel(&self) -> Vec<&impl Apparel> {
     //     self.inventory
     //         .items
@@ -52,6 +56,28 @@ impl Player {
             .iter()
             .filter_map(|i| match i.intrinsic() {
                 ItemType::Weapon(weapon) => Some(weapon),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn inventory_keys(&self) -> Vec<&Key> {
+        self.inventory
+            .items
+            .iter()
+            .filter_map(|i| match i.intrinsic() {
+                ItemType::Key(key) => Some(key),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn inventory_potions(&self) -> Vec<&Potion> {
+        self.inventory
+            .items
+            .iter()
+            .filter_map(|i| match i.intrinsic() {
+                ItemType::Potion(potion) => Some(potion),
                 _ => None,
             })
             .collect()

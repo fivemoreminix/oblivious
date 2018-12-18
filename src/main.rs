@@ -152,7 +152,7 @@ fn prologue() {
         match &input_new::<String>()
             .repeat_msg(&format!(
                 "Gender ({}): ",
-                list_options(&["(m)ale", "(f)emale"])
+                list_options(&["Male", "Female"])
             ))
             .get()
             .trim()
@@ -458,12 +458,11 @@ fn prologue() {
             .to_lowercase()[..]
         {
             "hadvar" => {
-                narrate("Coming soon :)");
+                branch_hadvar(&mut player);
                 break;
             }
             "ralof" => {
-                branch_ralof(&mut player);
-                break;
+                println!("This branch of gameplay is a work in progress. Choose Hadvar for now.");
             }
             _ => println!("{}", Red.paint("Choose either Hadvar or Ralof.")),
         }
@@ -471,7 +470,7 @@ fn prologue() {
 }
 
 fn branch_hadvar(player: &mut Player) {
-    dialog("Hadvar", "Looks like we're the only ones who made it. Was that really a dragon? The bringers of the End Times? We should keep moving. Come here. Let me see if I can get those bindings off. There you go. Take a look around, there should be plenty of gear to choose from. I'm going to see if I can find something for these burns. You better get that armor on. Give sword a few swings, too. Let's keep moving. That thing is still out there. Come on, this way.");
+    dialog("Hadvar", "Looks like we're the only ones who made it. Was that really a dragon? The bringers of the End Times? We should keep moving. Come here. Let me see if I can get those bindings off. There you go. Take a look around, there should be plenty of gear to choose from. I'm going to see if I can find something for these burns. You better get that armor on. Give sword a few swings, too.");
 
     let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
@@ -483,10 +482,77 @@ fn branch_hadvar(player: &mut Player) {
             &mut room,
         );
 
-        if player.inventory_weapons().contains(&&IMPERIAL_SWORD) {
+        if player.inventory_keys().contains(&&HELGEN_KEEP_KEY) {
             break;
         }
     }
+
+    dialog("Hadvar", "Let's keep moving. That thing is still out there. Come on, this way.");
+    dialog("Stormcloak Soldier", "We need to get moving! That dragon is tearing up the whole keep!");
+    dialog("Stormcloak Soldier", "Just give me a minute...I'm out of breath...");
+    dialog("Hadvar", "Hear that? Stormcloaks. Maybe we can reason with them.");
+    dialog("Hadvar", "Hold on now, we only want to...");
+    narrate("The Stormcloaks draw their weapons.");
+    dialog("Hadvar", "If you want to die, so be it.");
+    narrate(&format!("Hadvar and {} kill the two Stormcloaks.", player.name()));
+    dialog("Hadvar", "That's the end of that. Let's see if I can get that door open.");
+    narrate("They go downstairs, just in time for a collapsing roof.");
+    dialog("Hadvar", "Look out! Damn, that dragon doesn't give up easy.");
+    dialog("Stormcloak", "What are you doing? We need to get out of Helgen now!");
+    dialog("Stormcloak 2", "The Imperials have potions in here. We're going to need them.");
+    dialog("Hadvar", "An old storeroom. See if you can find some potions. Might come in handy.");
+
+    let mut room = Room::new("Mage's Quarters", "A cold and dusty work room for the smart mage that used to inhabit this area before the commotion. His body lies in his own cage, likely thrown hours before.", Some(vec!(&MINOR_HEALTH, &MINOR_MAGICKA, &MINOR_STAMINA)), None);
+    
+    loop {
+        process_command(
+            &input_new::<String>().repeat_msg(">").get().trim(),
+            player,
+            &mut room,
+        );
+
+        if player.inventory_potions().contains(&&MINOR_HEALTH) &&
+           player.inventory_potions().contains(&&MINOR_MAGICKA) &&
+           player.inventory_potions().contains(&&MINOR_STAMINA) {
+            break;
+        }
+    }
+
+    dialog("Hadvar", "Done then? This way!");
+    narrate("Downstairs is a torture room where the workers are fighting Stormcloaks.");
+    dialog("Hadvar", "A torture room. Gods, I wish we didn't need these...");
+    dialog("Torturer", "You fellows happened along just in time. These boys seemed quite upset at how I'd been entertaining their comrades.");
+    dialog("Hadvar", "Don't you even know what's going on? A dragon is attacking Helgen!");
+    dialog("Torturer", "A dragon? Please. Don't make up nonsense... although, come to think of it, I did hear some odd noises coming from over there.");
+    dialog("Hadvar", "Come with us. We need to get out of here.");
+    dialog("Torturer", "You have no authority over me, boy.");
+    dialog("Hadvar", "Didn't you hear me? I said the keep is under attack!");
+    dialog("Torturer's Assistant", "Forget the old man. I'll come with you.");
+    dialog("Hadvar", "Wait a second, looks like there's something in this cage.");
+    dialog("Torturer", "Don't bother with that. Lost the key ages ago. Poor fellow screamed for weeks.");
+    dialog("Hadvar", "See if you can get it open with some picks. We'll need everything we can get.");
+    dialog("Torturer", "Sure, take all my things. Please.");
+    dialog("Hadvar", "Grab what you can and let's go.");
+    
+    println!("WIP: locked containers + doors. Lock picking.");
+
+    dialog("Torturer", "There's no way out that way, you know...");
+    narrate(&format!("Hadvar and {} go further downstairs.", player.name()));
+    dialog("Hadvar", "Alright, let's see if we can find a way out. Let's see where this goes.");
+    narrate("They open a bridge into the tunnels, passing over before a rock breaks it.");
+    dialog("Hadvar", "Damn it. No going back that way. I guess we're lucky that didn't come down on top of us. We better push on. I'm sure the others will find another way out.");
+    narrate("Following the stream leads to a dead end.");
+    dialog("Hadvar", "Hmm, that doesn't go anywhere. I guess we'd better try this way.");
+    narrate("You encounter a den of giant spiders stringing down from the ceilings and walls. They hold up a mediocre fight before they're taken down by the might of you both.");
+    dialog("Hadvar", "What next, giant snakes?");
+    narrate("You keep walking further down.");
+    dialog("Hadvar", "Hold up. There's a bear just ahead. See her? I'd rather not tangle with her right now. We might be able to sneak by. Just take it nice and slow, and watch where you step. Or if you're feeling lucky, you can take this bow. Might take her by surprise. Go ahead. I'll follow your lead and watch your back.");
+    narrate("You both sneak past the bear and reach the exit to the cave.");
+    dialog("Hadvar", "This looks like the way out! I was starting to wonder if we'd ever make it.");
+    dialog("Hadvar", "Wait!");
+    narrate("Alduin flies away overhead.");
+    dialog("Hadvar", "Looks like he's gone for good this time. But I don't think we should stick around to see if he comes back. Closest town from here is Riverwood. My uncle's the blacksmith there. I'm sure he could help you out. It's probably best if we split up. Good luck. I wouldn't have made it without your help today. Listen, you should go to Solitude and join up with the Imperial Legion. We could really use someone like you. And if the rebels have themselves a dragon, General Tullius is the only one who can stop them.");
+    narrate(&format!("Hadvar and {} set off down the road.", player.name()));
 }
 
 fn branch_ralof(player: &mut Player) {
@@ -496,12 +562,6 @@ fn branch_ralof(player: &mut Player) {
     let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
 
-    let mut items: Vec<&Item> = Vec::new();
-    items.push(&IRON_SWORD);
-    items.push(&IMPERIAL_LIGHT_ARMOR);
-    items.push(&IRON_SWORD);
-    player.inventory.items.extend(items);
-
     loop {
         process_command(
             &input_new::<String>().repeat_msg(">").get().trim(),
@@ -509,7 +569,7 @@ fn branch_ralof(player: &mut Player) {
             &mut room,
         );
 
-        if player.inventory_weapons().contains(&&IMPERIAL_SWORD) {
+        if player.inventory_keys().contains(&&HELGEN_KEEP_KEY) {
             break;
         }
     }

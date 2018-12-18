@@ -9,6 +9,7 @@ pub enum ItemType<'a> {
     Clothing(&'a Clothing),
     Armor(&'a Armor),
     Key(&'a Key),
+    Potion(&'a Potion),
 }
 
 pub trait Item {
@@ -78,6 +79,60 @@ impl Item for Key {
         ItemType::Key(&self)
     }
 }
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum PotionType {
+    Health,
+    Magicka,
+    Stamina,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Potion {
+    name: &'static str,
+    ptype: PotionType,
+    strength: u16,
+    value: u16,
+}
+
+impl Item for Potion {
+    fn name(&self) -> &str {
+        self.name
+    }
+
+    fn weight(&self) -> u16 {
+        1
+    }
+
+    fn value(&self) -> u16 {
+        self.value
+    }
+
+    fn intrinsic(&self) -> ItemType {
+        ItemType::Potion(&self)
+    }
+}
+
+pub static MINOR_HEALTH: Potion = Potion {
+    name: "Potion of Minor Health",
+    ptype: PotionType::Health,
+    strength: 25,
+    value: 17,
+};
+
+pub static MINOR_MAGICKA: Potion = Potion {
+    name: "Potion of Minor Magicka",
+    ptype: PotionType::Magicka,
+    strength: 25,
+    value: 20,
+};
+
+pub static MINOR_STAMINA: Potion = Potion {
+    name: "Potion of Minor Stamina",
+    ptype: PotionType::Stamina,
+    strength: 25,
+    value: 20,
+};
 
 pub static IMPERIAL_SWORD: Weapon = Weapon {
     name: "Imperial Sword",
