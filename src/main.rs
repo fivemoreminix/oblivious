@@ -496,6 +496,12 @@ fn branch_ralof(player: &mut Player) {
     let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
 
+    let mut items: Vec<&Item> = Vec::new();
+    items.push(&IRON_SWORD);
+    items.push(&IMPERIAL_LIGHT_ARMOR);
+    items.push(&IRON_SWORD);
+    player.inventory.items.extend(items);
+
     loop {
         process_command(
             &input_new::<String>().repeat_msg(">").get().trim(),

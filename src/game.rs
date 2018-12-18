@@ -1,8 +1,16 @@
+use ansi_term::Colour::*;
+
 use crate::definitions::*;
+
+use std::collections::HashMap;
+
+pub fn filter_text(text: &str) -> String {
+    text.chars().filter(|&c| c != '\'').collect::<String>().to_lowercase()
+}
 
 pub fn split_whitespace_with_quotes(text: &str) -> Vec<String> {
     let mut items = Vec::new();
-    let mut chars = text.chars().peekable();
+    let mut chars = text.chars().filter(|&c| c != '\'').peekable();
 
     while let Some(c) = chars.next() {
         if !c.is_whitespace() {
@@ -40,8 +48,9 @@ pub fn split_whitespace_with_quotes(text: &str) -> Vec<String> {
 
 pub fn process_command(command: &str, player: &mut Player, current_room: &mut Room) {
     let cmd = command.to_lowercase();
-    if cmd.contains("help") {
+    if cmd.starts_with("?") || cmd.contains("help") {
         println!("Commands: {}", list_options(&["look", "inventory [container]", "take <items>", "ctake <container> <items>"]));
+        println!("Tip: For multi-word arguments, use quotation marks. E.x. `take \"iron sword\"`");
     } else if cmd.starts_with("look") {
         println!("{}", &current_room.description);
         if current_room.items.len() > 0 {
@@ -77,14 +86,14 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             let mut found_container = false;
 
             for container in &current_room.containers {
-                if container.name.to_lowercase() == container_name {
+                if filter_text(&container.name) == container_name {
                     inventory = container;
                     found_container = true;
                 }
             }
 
             if !found_container {
-                println!("Usage: `inventory [container]` where you can optionally list a container to see inside of.");
+                println!("Could not find container {:?}", container_name);
                 return;
             }
         } else if words.len() == 1 {
@@ -97,16 +106,29 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
         if inventory.items.is_empty() {
             println!("No items in {}", &inventory.name);
         } else {
-            println!(
-                "Items: {}",
-                list_options(
-                    &inventory
-                        .items
-                        .iter()
-                        .map(|item| item.name())
-                        .collect::<Vec<&str>>()
-                )
-            );
+            let mut item_quantities = HashMap::new();
+            for item in inventory.items.iter().map(|item| item.name()) {
+                *item_quantities.entry(item).or_insert(0) += 1;
+            }
+
+            let mut output = String::new();
+            let mut commas = if item_quantities.len() > 1 {
+                item_quantities.len() - 1
+            } else {
+                0
+            };
+            for (k, &v) in &item_quantities {
+                if v > 1 {
+                    output.push_str(&(Blue.paint(v.to_string()).to_string() + "x"));
+                }
+                output.push_str(&Green.paint(k.to_string()).to_string());
+                if commas > 0 {
+                    output.push_str(", ");
+                    commas -= 1;
+                }
+            }
+
+            println!("Items: {}", output);
         }
     } else if cmd.starts_with("ctake") {
         let words = split_whitespace_with_quotes(&cmd);
@@ -122,7 +144,7 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             let mut found_container = false;
 
             for container in &mut current_room.containers {
-                if &container.name.to_lowercase() == container_name {
+                if &filter_text(&container.name) == container_name {
                     inventory = container;
                     found_container = true;
                 }
@@ -139,11 +161,16 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             }
 
             let mut items = Vec::<&Item>::new();
-            for item in &item_names {
+            for &item in &item_names {
+                let mut found_item = false;
                 for &citem in &inventory.items {
-                    if item == &&citem.name().to_lowercase() {
+                    if item == &filter_text(&citem.name()) {
                         items.push(citem);
+                        found_item = true;
                     }
+                }
+                if !found_item {
+                    println!("Could not find item {:?}", item);
                 }
             }
 
@@ -153,17 +180,23 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             }
 
             player.inventory.items.extend(&items);
+
+            println!("Took {} item{}", items.len(), if items.len() > 1 { 's' } else { ' ' });
         }
     } else if cmd.starts_with("take") {
-        let item_names: Vec<&str> = cmd.split_whitespace().collect();
-        if item_names.len() > 1 {
+        let item_names: Vec<String> = split_whitespace_with_quotes(&cmd);
+        if item_names.len() >= 2 {
             let mut items = Vec::<&Item>::new();
             for item in &item_names[1..] {
+                let mut found_item = false;
                 for &room_item in &current_room.items {
-                    if item == &room_item.name() {
+                    if item == &filter_text(room_item.name()) {
                         items.push(room_item);
-                        println!("took room item {:?}", room_item.name());
+                        found_item = true;
                     }
+                }
+                if !found_item {
+                    println!("Could not find item {:?}", item);
                 }
             }
 
@@ -173,10 +206,12 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
             for item in &items {
                 current_room.items.remove_item(item);
             }
+
+            println!("Took {} item{}", items.len(), if items.len() != 1 { 's' } else { ' ' });
         } else {
             println!("Usage: `take <items>` where `items` is a list of items in the room to pickup.");
         }
     } else {
-        println!("Unrecognized command. Try 'help' for a list of commands.");
+        println!("Unrecognized command. Try 'help' or '?' for a list of commands.");
     }
 }

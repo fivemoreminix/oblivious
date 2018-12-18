@@ -29,12 +29,13 @@ pub fn dialog(name: &str, text: &str) {
     wait(Duration::from_float_secs(seconds_to_read(text)) + Duration::from_secs(1));
 }
 
-pub fn list_options(options: &[&str]) -> String {
+pub fn list_options(options: &[impl ToString]) -> String {
+    let options = options;
     assert!(options.len() > 0);
     let mut commas = options.len() - 1;
     let mut output = String::new();
     for item in options {
-        output.push_str(&Green.paint(*item).to_string());
+        output.push_str(&Green.paint(item.to_string()).to_string());
         if commas != 0 {
             output.push_str(", ");
             commas -= 1;
