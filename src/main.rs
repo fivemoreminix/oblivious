@@ -476,11 +476,22 @@ fn branch_hadvar(player: &mut Player) {
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
 
     loop {
-        process_command(
-            &input_new::<String>().repeat_msg(">").get().trim(),
-            player,
-            &mut room,
-        );
+        let command = input_new::<String>().repeat_msg(">").get();
+        let command = command.trim();
+
+        if command == "?" {
+            help(&["look", "inventory", "take", "ctake"]);
+        } else if command.starts_with("look") {
+            look(&command, &mut room);
+        } else if command.starts_with("inventory") {
+            inventory(&command, player, &mut room);
+        } else if command.starts_with("take") {
+            take(&command, player, &mut room);
+        } else if command.starts_with("ctake") {
+            ctake(&command, player, &mut room);
+        } else {
+            println!("Unrecognized command. Try '?' for a list of commands.");
+        }
 
         if player.inventory_keys().contains(&&HELGEN_KEEP_KEY) {
             break;
@@ -505,11 +516,22 @@ fn branch_hadvar(player: &mut Player) {
     let mut room = Room::new("Mage's Quarters", "A cold and dusty work room for the smart mage that used to inhabit this area before the commotion. His body lies in his own cage, likely thrown hours before.", Some(vec!(&MINOR_HEALTH, &MINOR_MAGICKA, &MINOR_STAMINA)), None);
     
     loop {
-        process_command(
-            &input_new::<String>().repeat_msg(">").get().trim(),
-            player,
-            &mut room,
-        );
+        let command = input_new::<String>().repeat_msg(">").get();
+        let command = command.trim();
+
+        if command == "?" {
+            help(&["look", "inventory", "take", "ctake"]);
+        } else if command.starts_with("look") {
+            look(&command, &mut room);
+        } else if command.starts_with("inventory") {
+            inventory(&command, player, &mut room);
+        } else if command.starts_with("take") {
+            take(&command, player, &mut room);
+        } else if command.starts_with("ctake") {
+            ctake(&command, player, &mut room);
+        } else {
+            println!("Unrecognized command. Try '?' for a list of commands.");
+        }
 
         if player.inventory_potions().contains(&&MINOR_HEALTH) &&
            player.inventory_potions().contains(&&MINOR_MAGICKA) &&
@@ -553,24 +575,4 @@ fn branch_hadvar(player: &mut Player) {
     narrate("Alduin flies away overhead.");
     dialog("Hadvar", "Looks like he's gone for good this time. But I don't think we should stick around to see if he comes back. Closest town from here is Riverwood. My uncle's the blacksmith there. I'm sure he could help you out. It's probably best if we split up. Good luck. I wouldn't have made it without your help today. Listen, you should go to Solitude and join up with the Imperial Legion. We could really use someone like you. And if the rebels have themselves a dragon, General Tullius is the only one who can stop them.");
     narrate(&format!("Hadvar and {} set off down the road.", player.name()));
-}
-
-fn branch_ralof(player: &mut Player) {
-    narrate("Upon entering the keep, Ralof goes to check on a fallen comrade.");
-    dialog("Ralof", "We'll meet again in Sovngarde, brother. Looks like we're the only ones who made it. That thing was a dragon. No doubt. Just like the children's stories and the legends. The harbingers of the End Times. We better get moving. Come here, let me see if I can get those bindings off. There you go. May as well take Gunjar's gear...he won't be needing it anymore. Alright, get that armor on and give that axe a few swings. I'm going to see if I can find some way out of here. This one's locked. Let's see about that gate. Damn. No way to open this from our side.");
-
-    let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
-    let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
-
-    loop {
-        process_command(
-            &input_new::<String>().repeat_msg(">").get().trim(),
-            player,
-            &mut room,
-        );
-
-        if player.inventory_keys().contains(&&HELGEN_KEEP_KEY) {
-            break;
-        }
-    }
 }

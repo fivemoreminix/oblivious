@@ -46,13 +46,18 @@ pub fn split_whitespace_with_quotes(text: &str) -> Vec<String> {
     items
 }
 
-pub fn process_command(command: &str, player: &mut Player, current_room: &mut Room) {
-    let cmd = command.to_lowercase();
-    if cmd.starts_with("?") || cmd.contains("help") {
-        println!("Commands: {}", list_options(&["look", "inventory [container]", "take <items>", "ctake <container> <items>"]));
-        println!("Tip: For multi-word arguments, use quotation marks. E.x. take \"iron sword\"");
-    } else if cmd.starts_with("look") {
-        println!("{}", &current_room.description);
+pub fn help(options: &[impl ToString]) {
+    println!("Available commands: {}", list_options(options));
+    println!("Use double quotes for multi-word command arguments. E.x. take \"iron sword\"");
+    println!("For information on using a command, try the name of the command and a question mark immediately following: look?");
+    println!("Usage: <> means one required, [] means zero or one required, {{}} means zero or more required");
+}
+
+pub fn look(command: &str, current_room: &mut Room) {
+    if command.starts_with("look?") {
+        println!("Displays information about the current room: its items and containers.\nUsage: look");
+    } else {
+        println!("{}: {}", Purple.paint(&current_room.name), Blue.paint(&current_room.description));
         if current_room.items.len() > 0 {
             println!(
                 "Items: {}",
@@ -77,8 +82,15 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
                 )
             );
         }
-    } else if cmd.starts_with("inventory") {
-        let words: Vec<String> = split_whitespace_with_quotes(&cmd);
+    }
+}
+
+pub fn inventory(command: &str, player: &mut Player, current_room: &mut Room) {
+    if command.starts_with("inventory?") {
+        println!("Prints the items of the given container. Without any given container name, this will display the items in your inventory.");
+        println!("Usage: inventory [container]");
+    } else {
+        let words: Vec<String> = split_whitespace_with_quotes(&filter_text(command));
         let mut inventory: &Container = &player.inventory;
         
         if words.len() > 1 {
@@ -130,8 +142,15 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
 
             println!("Items: {}", output);
         }
-    } else if cmd.starts_with("ctake") {
-        let words = split_whitespace_with_quotes(&cmd);
+    }
+}
+
+pub fn ctake(command: &str, player: &mut Player, current_room: &mut Room) {
+    if command.starts_with("ctake?") {
+        println!("Take items from a given container. The container name is provided first, then a list of item names follows.");
+        println!("Usage: ctake <container> <item> {{item}}");
+    } else {
+        let words = split_whitespace_with_quotes(&filter_text(command));
         if words.len() < 3 {
             println!("{}", words.len());
             println!("Usage: `ctake <container> <items>` where items can be one or a list of item names to take from the given container.");
@@ -162,6 +181,11 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
 
             let mut items = Vec::<&Item>::new();
             for &item in &item_names {
+                if item == "all" {
+                    items.extend(&inventory.items);
+                    break;
+                }
+
                 let mut found_item = false;
                 for &citem in &inventory.items {
                     if item == &filter_text(&citem.name()) {
@@ -183,11 +207,23 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
 
             println!("Took {} item{}", items.len(), if items.len() > 1 { 's' } else { ' ' });
         }
-    } else if cmd.starts_with("take") {
-        let item_names: Vec<String> = split_whitespace_with_quotes(&cmd);
+    }
+}
+
+pub fn take(command: &str, player: &mut Player, current_room: &mut Room) {
+    if command.starts_with("take?") {
+        println!("Take items from the room.");
+        println!("Usage: take <item> {{item}}");
+    } else {
+        let item_names: Vec<String> = split_whitespace_with_quotes(&filter_text(command));
         if item_names.len() >= 2 {
             let mut items = Vec::<&Item>::new();
             for item in &item_names[1..] {
+                if item == "all" {
+                    items.extend(&current_room.items);
+                    break;
+                }
+
                 let mut found_item = false;
                 for &room_item in &current_room.items {
                     if item == &filter_text(room_item.name()) {
@@ -211,7 +247,5 @@ pub fn process_command(command: &str, player: &mut Player, current_room: &mut Ro
         } else {
             println!("Usage: `take <items>` where `items` is a list of items in the room to pickup.");
         }
-    } else {
-        println!("Unrecognized command. Try 'help' or '?' for a list of commands.");
     }
 }
