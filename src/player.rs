@@ -5,13 +5,15 @@ pub struct Player {
     name: String,
     race: Race,
     gender: Gender,
-    pub inventory: Container,
+    inventory: Container,
     max_health: u32,
     max_stamina: u32,
     max_magicka: u32,
+    max_weight: u16,
     health: u32,
     stamina: u32,
     magicka: u32,
+    weight: u16,
     pub apparel: ApparelPlacement,
 }
 
@@ -25,15 +27,72 @@ impl Player {
             max_health: 100,
             max_stamina: 100,
             max_magicka: 100,
+            max_weight: 100,
             health: 100,
             stamina: 100,
             magicka: 100,
+            weight: 100,
             apparel: ApparelPlacement::new(),
         }
     }
 
     pub fn name(&self) -> &str {
         &self.name
+    }
+
+    pub fn items(&self) -> &[&'static Item] {
+        &self.inventory.items
+    }
+
+    /// Add a single item to the player's inventory.
+    /// Returns true if the item was accepted. False if
+    /// the item could not be added to the inventory.
+    pub fn add_item(&mut self, item: &'static Item) -> bool {
+        if self.weight + item.weight() <= self.max_weight {
+            self.inventory.items.push(item);
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn add_items(&mut self, items: &[&'static Item]) -> Option<Vec<&'static Item>> {
+        let mut rejected = Vec::<&'static Item>::new();
+        for &item in items {
+            if !self.add_item(item) {
+                rejected.push(item);
+            }
+        }
+
+        println!("Acquired {} item{}", items.len(), if items.len() > 1 { 's' } else { ' ' });
+
+        if rejected.is_empty() {
+            None
+        } else {
+            Some(rejected)
+        }
+    }
+
+    /// Returns true if the item has been removed. False otherwise.
+    pub fn remove_item(&mut self, item: &'static Item) -> bool {
+        self.inventory.items.remove_item(&item).is_some()
+    }
+
+    pub fn remove_items(&mut self, items: &[&'static Item]) -> Option<Vec<&'static Item>> {
+        let mut rejected = Vec::<&'static Item>::new();
+        for &item in items {
+            if !self.remove_item(item) {
+                rejected.push(item);
+            }
+        }
+
+        println!("Removed {} item{}", items.len(), if items.len() > 1 { 's' } else { ' ' });
+
+        if rejected.is_empty() {
+            None
+        } else {
+            Some(rejected)
+        }
     }
 
     // pub fn inventory_apparel(&self) -> Vec<&impl Apparel> {

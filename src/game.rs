@@ -91,7 +91,7 @@ pub fn inventory(command: &str, player: &mut Player, current_room: &mut Room) {
         println!("Usage: inventory [container]");
     } else {
         let words: Vec<String> = split_whitespace_with_quotes(&filter_text(command));
-        let mut inventory: &Container = &player.inventory;
+        let mut inventory: Option<&Container> = None;
         
         if words.len() > 1 {
             let container_name = words[1].to_lowercase();
@@ -99,7 +99,7 @@ pub fn inventory(command: &str, player: &mut Player, current_room: &mut Room) {
 
             for container in &current_room.containers {
                 if filter_text(&container.name) == container_name {
-                    inventory = container;
+                    inventory = Some(container);
                     found_container = true;
                 }
             }
@@ -109,17 +109,22 @@ pub fn inventory(command: &str, player: &mut Player, current_room: &mut Room) {
                 return;
             }
         } else if words.len() == 1 {
-            inventory = &player.inventory;
+            inventory = None;
         } else {
             println!("Usage: `inventory [container]` where you can optionally list a container to see inside of.");
             return;
         }
 
-        if inventory.items.is_empty() {
-            println!("No items in {}", &inventory.name);
+        if match inventory { Some(c) => c.items.is_empty(), None => player.items().is_empty() } {
+            println!("No items in {}", match inventory { Some(c) => &c.name, None => "inventory" });
         } else {
+            let inventory = match inventory {
+                Some(c) => c.items.as_slice(),
+                None => player.items(),
+            };
+
             let mut item_quantities = HashMap::new();
-            for item in inventory.items.iter().map(|item| item.name()) {
+            for item in inventory.iter().map(|item| item.name()) {
                 *item_quantities.entry(item).or_insert(0) += 1;
             }
 
@@ -149,6 +154,7 @@ pub fn ctake(command: &str, player: &mut Player, current_room: &mut Room) {
     if command.starts_with("ctake?") {
         println!("Take items from a given container. The container name is provided first, then a list of item names follows.");
         println!("Usage: ctake <container> <item> {{item}}");
+        println!("Tip: in place of an item, you can say {}, which will assume every item in the container at once.", Green.paint("all"));
     } else {
         let words = split_whitespace_with_quotes(&filter_text(command));
         if words.len() < 3 {
@@ -159,12 +165,12 @@ pub fn ctake(command: &str, player: &mut Player, current_room: &mut Room) {
             words.next().unwrap(); // consume "ctake"
             let container_name = words.next().unwrap();
 
-            let mut inventory: &mut Container = &mut player.inventory;
+            let mut inventory: Option<&mut Container> = None;
             let mut found_container = false;
 
             for container in &mut current_room.containers {
                 if &filter_text(&container.name) == container_name {
-                    inventory = container;
+                    inventory = Some(container);
                     found_container = true;
                 }
             }
@@ -179,15 +185,17 @@ pub fn ctake(command: &str, player: &mut Player, current_room: &mut Room) {
                 item_names.push(name);
             }
 
+            let cinventory = match inventory { Some(ref c) => c.items.as_slice(), None => &player.items() };
+
             let mut items = Vec::<&Item>::new();
             for &item in &item_names {
                 if item == "all" {
-                    items.extend(&inventory.items);
+                    items.extend(cinventory);
                     break;
                 }
 
                 let mut found_item = false;
-                for &citem in &inventory.items {
+                for &citem in cinventory {
                     if item == &filter_text(&citem.name()) {
                         items.push(citem);
                         found_item = true;
@@ -198,14 +206,22 @@ pub fn ctake(command: &str, player: &mut Player, current_room: &mut Room) {
                 }
             }
 
-            // remove items from container
-            for item in &items {
-                inventory.items.remove_item(item);
+            std::mem::drop(cinventory);
+
+            match inventory {
+                Some(c) => {
+                    for item in &items {
+                        c.items.remove_item(item);
+                    }
+                }
+                None => {
+                    for &item in &items {
+                        player.remove_item(item);
+                    }
+                }
             }
 
-            player.inventory.items.extend(&items);
-
-            println!("Took {} item{}", items.len(), if items.len() > 1 { 's' } else { ' ' });
+            player.add_items(&items);
         }
     }
 }
@@ -214,6 +230,7 @@ pub fn take(command: &str, player: &mut Player, current_room: &mut Room) {
     if command.starts_with("take?") {
         println!("Take items from the room.");
         println!("Usage: take <item> {{item}}");
+        println!("Tip: in place of an item, you can say {}, which will assume every item in the room at once.", Green.paint("all"));
     } else {
         let item_names: Vec<String> = split_whitespace_with_quotes(&filter_text(command));
         if item_names.len() >= 2 {
@@ -236,7 +253,7 @@ pub fn take(command: &str, player: &mut Player, current_room: &mut Room) {
                 }
             }
 
-            player.inventory.items.extend(&items);
+            player.add_items(&items);
 
             // remove items from room
             for item in &items {

@@ -475,26 +475,49 @@ fn branch_hadvar(player: &mut Player) {
     let chest = Container::new("Warden's Chest", vec![&IMPERIAL_LIGHT_ARMOR, &IRON_SWORD, &IMPERIAL_LIGHT_BOOTS, &HELGEN_KEEP_KEY]);
     let mut room = Room::new("Helgen's Keep", "Cold, rumbling stone walls lit by several torch flames. The dragon's rustling outside the keep causes particles to be shaken from the walls.", Some(vec!(&IRON_SWORD)), Some(vec!(chest)));
 
+    let mut complete = false;
+
     loop {
         let command = input_new::<String>().repeat_msg(">").get();
         let command = command.trim();
 
-        if command == "?" {
-            help(&["look", "inventory", "take", "ctake"]);
-        } else if command.starts_with("look") {
-            look(&command, &mut room);
-        } else if command.starts_with("inventory") {
-            inventory(&command, player, &mut room);
-        } else if command.starts_with("take") {
-            take(&command, player, &mut room);
-        } else if command.starts_with("ctake") {
-            ctake(&command, player, &mut room);
+        if !complete {
+            if command == "?" {
+                help(&["look", "inventory", "take", "ctake"]);
+            } else if command.starts_with("look") {
+                look(&command, &mut room);
+            } else if command.starts_with("inventory") {
+                inventory(&command, player, &mut room);
+            } else if command.starts_with("take") {
+                take(&command, player, &mut room);
+            } else if command.starts_with("ctake") {
+                ctake(&command, player, &mut room);
+            } else {
+                println!("Unrecognized command. Try '?' for a list of commands.");
+            }
         } else {
-            println!("Unrecognized command. Try '?' for a list of commands.");
+            if command == "?" {
+                help(&["continue (story)", "look", "inventory", "take", "ctake"]);
+            } else if command.starts_with("look") {
+                look(&command, &mut room);
+            } else if command.starts_with("inventory") {
+                inventory(&command, player, &mut room);
+            } else if command.starts_with("take") {
+                take(&command, player, &mut room);
+            } else if command.starts_with("ctake") {
+                ctake(&command, player, &mut room);
+            } else if command.starts_with("continue") {
+                break;
+            } else {
+                println!("Unrecognized command. Try '?' for a list of commands.");
+            }
         }
 
         if player.inventory_keys().contains(&&HELGEN_KEEP_KEY) {
-            break;
+            println!("Ready to {}?", Green.paint("continue"));
+            complete = true;
+        } else {
+            complete = false;
         }
     }
 
@@ -513,30 +536,53 @@ fn branch_hadvar(player: &mut Player) {
     dialog("Stormcloak 2", "The Imperials have potions in here. We're going to need them.");
     dialog("Hadvar", "An old storeroom. See if you can find some potions. Might come in handy.");
 
-    let mut room = Room::new("Mage's Quarters", "A cold and dusty work room for the smart mage that used to inhabit this area before the commotion. His body lies in his own cage, likely thrown hours before.", Some(vec!(&MINOR_HEALTH, &MINOR_MAGICKA, &MINOR_STAMINA)), None);
+    let mut room = Room::new("Mage's Quarters", "A cold and dusty work room for the smart mage that used to inhabit this area before the commotion.", Some(vec!(&MINOR_HEALTH, &MINOR_MAGICKA, &MINOR_STAMINA)), None);
     
+    let mut complete = false;
+
     loop {
         let command = input_new::<String>().repeat_msg(">").get();
         let command = command.trim();
 
-        if command == "?" {
-            help(&["look", "inventory", "take", "ctake"]);
-        } else if command.starts_with("look") {
-            look(&command, &mut room);
-        } else if command.starts_with("inventory") {
-            inventory(&command, player, &mut room);
-        } else if command.starts_with("take") {
-            take(&command, player, &mut room);
-        } else if command.starts_with("ctake") {
-            ctake(&command, player, &mut room);
+        if !complete {
+            if command == "?" {
+                help(&["look", "inventory", "take", "ctake"]);
+            } else if command.starts_with("look") {
+                look(&command, &mut room);
+            } else if command.starts_with("inventory") {
+                inventory(&command, player, &mut room);
+            } else if command.starts_with("take") {
+                take(&command, player, &mut room);
+            } else if command.starts_with("ctake") {
+                ctake(&command, player, &mut room);
+            } else {
+                println!("Unrecognized command. Try '?' for a list of commands.");
+            }
         } else {
-            println!("Unrecognized command. Try '?' for a list of commands.");
+            if command == "?" {
+                help(&["continue (story)", "look", "inventory", "take", "ctake"]);
+            } else if command.starts_with("look") {
+                look(&command, &mut room);
+            } else if command.starts_with("inventory") {
+                inventory(&command, player, &mut room);
+            } else if command.starts_with("take") {
+                take(&command, player, &mut room);
+            } else if command.starts_with("ctake") {
+                ctake(&command, player, &mut room);
+            } else if command.starts_with("continue") {
+                break;
+            } else {
+                println!("Unrecognized command. Try '?' for a list of commands.");
+            }
         }
 
         if player.inventory_potions().contains(&&MINOR_HEALTH) &&
            player.inventory_potions().contains(&&MINOR_MAGICKA) &&
            player.inventory_potions().contains(&&MINOR_STAMINA) {
-            break;
+            println!("Ready to {}?", Green.paint("continue"));
+            complete = true;
+        } else {
+            complete = false;
         }
     }
 
