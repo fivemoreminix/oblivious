@@ -1,10 +1,8 @@
 [package]
 name = "oblivious"
-version = "0.2.0"
-authors = ["Luke Wilson"]
+version = "0.3.0"
+authors = ["Luke I. Wilson <thelukaswils@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-read_input = "0.5.2"
-ansi_term = "0.11.0"
-version = "3.0.0"
+termion = "1.5.3"
