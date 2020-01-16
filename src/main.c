@@ -1,12 +1,34 @@
-#include <stdio.h>
-
-#define NARRATE(text) printf("*%s*\n", text)
-#define DIALOG(name, text) printf("%s: %s\n", name, text)
+#include "game.h"
 
 int main() {
+    printf(
+    "         /\\       /\\\n"
+    "        / (       ) \\\n"
+    "       / /\\)     (/\\ \\\n"
+    "      / /   (\\      \\ \\\n"
+    "     / /    ; \\_/)   \\ \\\n"
+    "    / /    (,-. (     \\ \\\n"
+    "   / /         ) )     \\ \\\n"
+    "  / /       ,-','       \\ \\   Skyrim Text Adventure Game \"Oblivious\"\n"
+    " / /     (\\(  (  /)      \\ \\                                     by Luke I. Wilson\n"
+    "/  '._____)\\)  \\/(______,'  \\__________________________________________________________________\n"
+    "\\                           /¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n"
+    " \\     .-.         ,-.     /  Version %s\n"
+    "  \\   /   \\/\\   (\\/   \\   /\n"
+    "   \\  \\      \\   )    /  /    Game script from\n"
+    "    \\  \\      ) /   ,'  /     http://www.gamershell.com/faqs/theelderscrollsvskyrimgamescript/\n"
+    "     \\  \\    / /   |   /\n"
+    "      \\  \\   \\ \\   |  /       All code is owned by me and licensed Creative-Commons Zero (CC0)\n"
+    "       \\  )   ) )  | /        The script and game is copyrighted content owned by Bethesda\n"
+    "        \\ |  / /   (/\n"
+    "         \\) / /\n"
+    "           / /  /|\n"
+    "           \\ \\_/ )\n"
+    "            \\   /\n"
+    "             \\_/\n", VERSION);
+
     printf("Press any key to start ...");
     getchar();
-
 
     NARRATE("An Imperial wagon is driving four prisoners down a snowy mountain pass. All are seated and bound; the one dressed in finery is gagged.");
     DIALOG("Ralof", "Hey, you. You're finally awake. You were trying to cross the border, right? Walked right into that Imperial ambush, same as us, and that thief over there.");
@@ -35,7 +57,7 @@ int main() {
     DIALOG("Torolf", "Inside the house. Now.");
     NARRATE("The wagon stops near the chopping block.");
     DIALOG("Imperial Soldier", "Whoa.");
-    // TODO: pause 2 seconds
+    WAIT(2);
     DIALOG("Lokir", "Why are they stopping?");
     DIALOG("Ralof", "Why do you think? End of the line. Let's go. Shouldn't keep the gods waiting for us.");
     DIALOG("Lokir", "No! Wait! We're not rebels!");
@@ -52,7 +74,7 @@ int main() {
     DIALOG("Imperial Captain", "Halt!");
     DIALOG("Lokir", "You're not going to kill me!");
     DIALOG("Imperial Captain", "Archers!");
-    // TODO: pause for 2 seconds
+    WAIT(2);
     NARRATE("Lokir is downed with one bowshot."); DIALOG("Imperial Captain", "Anyone else feel like running?");
     DIALOG("Hadvar", "Wait, you there. Step forward. Who are you?");
 
