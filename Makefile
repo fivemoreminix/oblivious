@@ -5,7 +5,7 @@ run: build
 	./oblivious
 
 build:
-	$(CC) $(CARGS) -o oblivious src/main.c src/level0.c
+	$(CC) $(CARGS) -o oblivious src/main.c
 
 clean:
 	rm ./oblivious
