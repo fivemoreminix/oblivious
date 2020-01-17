@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <stdio.h>
+#include <string.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -22,6 +23,13 @@ unsigned words_in_str(char* text);
     WAIT(SEC_TO_READ(text) + 1.0)
 #define DIALOG(name, text) printf("%s: %s\n", name, text); \
     WAIT(SEC_TO_READ(text) + 1.0)
+
+typedef struct game_settings game_settings;
+struct game_settings {
+    int wpm
+};
+int string_to_game_settings(char* const input, game_settings* gs); /* errors: 0 = no error, 1 = an error found while parsing */
+char* game_settings_to_string(game_settings* const gs);
 
 void level0_begin();
 
