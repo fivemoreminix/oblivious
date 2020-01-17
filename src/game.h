@@ -14,12 +14,7 @@
 #define VERSION "0.1"
 #define WPM (300)
 
-unsigned words_in_str(char* text) {
-    unsigned words = 1;
-    for (char* c = text; *c != '\0'; ++c)
-        if (*c == ' ') ++words; // this function counts spaces in a string
-    return words;              // therefore, dialog should avoid multiple spaces
-}
+unsigned words_in_str(char* text);
 
 #define WPS (WPM / 60)
 #define SEC_TO_READ(text) (words_in_str(text) / WPS)
