@@ -27,13 +27,22 @@ int main() {
     "            \\   /\n"
     "             \\_/\n", VERSION);
 
-    printf("\n1: Continue Game\n2: New Game\n3: Load Game\n\n0: Quit\n");
     int opt;
-    if (scanf("%d", &opt) != 1) {
-        // A number isn't entered
-    } else {
-        printf("Succeeded: %d\n", opt);
+    while (TRUE) {
+        printf("\n1: Continue Game\n2: New Game\n3: Load Game\n\n0: Quit\n");
+        if (scanf("%d", &opt) != 1) {
+            // A number isn't entered
+        }
+
+        if (opt > 0 && opt < 4) {
+            level0_begin();
+            break;
+        } else if (opt == 0) {
+            break;
+        } else {
+            printf("Entered number was out of range!\n");
+        }
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
